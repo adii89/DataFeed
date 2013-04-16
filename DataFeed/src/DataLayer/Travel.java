@@ -9,5 +9,10 @@ package DataLayer;
  * @author hdflournoy
  */
 public class Travel {
+    private String North; 
+    private String South;
+    private String East; 
+    private String West;
+   
     
 }

@@ -13,5 +13,6 @@ public class Instructor {
     private String _InstructorFirstName;
     private String _InstructorLastName;
     private char _InstrictorMiddleInit;
-    public
+    private int NumberOfCoursesToTeach; //preference in number of courses to teach
+    
             }
