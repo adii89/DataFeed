@@ -15,6 +15,6 @@ public class Courses {
     private String Dept;
     private int CallNumber; 
     private int Days; 
-    private int Time; //is this an int? 
+    private int Time; //is this an int? *It looks more like a string...we have to extract it
     private int Media; //does it require a media room, 1 = yes 0 = no  
 }
