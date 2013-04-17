@@ -11,12 +11,15 @@ package DataLayer;
 public class Rooms {
     
     private int RoomNumber;//room number
+     private String building;//building where the room is located at
     private int Capacity;//room capacity 
     private String Campus; //campus is either north south east or west (maybe we call them 1/2/3/4)
+   
     private int Media; //media room or not, 1 = yes, 0 = no 
     
-  public Rooms (int rNum, int cap, String camp, int med){
+  public Rooms (int rNum, String build, int cap, String camp, int med){
   RoomNumber= rNum;
+  building= build;
   Capacity= cap;
   Campus = camp;
   Media= med;
