@@ -7,8 +7,9 @@ package DataLayer;
 /**
  *
  * @author Valerie
+ * The objects pertaining to this class will be constructed with the input from the sections.txt file
  */
-public class Sections{
+public class Sections{ 
     
     private int CourseNumber;
     private int NumberEnrolled;

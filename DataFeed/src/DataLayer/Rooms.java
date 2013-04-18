@@ -7,14 +7,14 @@ package DataLayer;
 /**
  *
  * @author hdflournoy
+ * The objects pertaining to this class will be constructed with the input from the rooms.txt file
  */
 public class Rooms {
     
     private int RoomNumber;//room number
-     private String building;//building where the room is located at
+    private String building;//building where the room is located at
     private int Capacity;//room capacity 
     private String Campus; //campus is either north south east or west (maybe we call them 1/2/3/4)
-   
     private int Media; //media room or not, 1 = yes, 0 = no 
     
   public Rooms (int rNum, String build, int cap, String camp, int med){
