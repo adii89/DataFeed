@@ -7,23 +7,22 @@ package DataAccess;
 import Security.Cryptography;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import Config.ConfigManager;
 
 /**
  *
  * @author Adi
  */
 public class ConnectionString {
-    private static Properties Prop = new Properties();
     //Get Username
-    private static String GetDBUsername() throws Exception {
+    private static String GetDBUsername() {
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            return ConfigManager.GetConfgElement("DBUsername");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return Cryptography.Decrypt(Prop.getProperty("DBUsername"));
+        
     }
     //get the password
     private static String GetDBPassword() throws Exception {

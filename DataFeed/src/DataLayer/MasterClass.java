@@ -174,7 +174,7 @@ public static void main(String[] args)throws IOException{
                                     char mInitialI = nameI[2].trim().charAt(0);///****ASSUMPTION: Sll instructors have middle initial
                                     int temp=0; //*************TEMPORARY VARIABLE...VALERIE HAS TO ASK ADRIAN ABOUT IT
                                     p = prefe[counterInstructorPref];
-                                   Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
+                                   //Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
                                     
                                     /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
                         }

@@ -47,9 +47,29 @@ public class Database {
         }
     }
     
-    //TODO: BeginTransaction
     //TODO: CommitTransaction
+    private void CommitTransaction() throws SQLException {
+        if (Conn != null){
+            try {
+                Conn.commit();
+                CloseConnection();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
     //TODO: RollbackTransaction
+    private void RollbackTransaction(){
+        if (Conn != null){
+            try {
+                Conn.rollback();
+                CloseConnection();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
     
     //TODO: ExecuteSQL
     //TODO: SelectSQL
