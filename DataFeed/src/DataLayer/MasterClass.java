@@ -33,7 +33,7 @@ public static void main(String[] args)throws IOException{
    Preferences p;
    Instructor instruct;
    int counterInstructorPref=0;
-   for (int i =0; i<6; i ++){
+   for (int i =0; i<5; i ++){
     
         pathFile = filesArray[i];//holds the current file
 
@@ -47,7 +47,7 @@ public static void main(String[] args)throws IOException{
                  BufferedReader br= new BufferedReader(new FileReader(pathFile));
                  String line= br.readLine(); //reads column names
                  line= br.readLine(); //reads first line of records
-                 String delims = "[ ,]+"; //for parsing the Instructor's name
+                 String delims = " "; //for parsing the Instructor's name
                     while(line!=null){
                         
                         switch(i) {
@@ -160,10 +160,9 @@ public static void main(String[] args)throws IOException{
                                      //courses
                                      
                                      
-                                 case 4:
-                                     //"C:\\travel.txt"
+                                 
                                      
-                                 case 5:
+                                 case 4:
                                      //"C:\\instructors.txt"
                                     counterInstructorPref=0;
                                      String[] instructor=line.split("\\|");
