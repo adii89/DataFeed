@@ -11,7 +11,7 @@ package DataLayer;
  */
 public class Sections{ 
     
-    private int CourseNumber;
+    private String CourseNumber;
     private int NumberEnrolled;
     private String Dept;
     private String CallNumber; 
@@ -20,7 +20,7 @@ public class Sections{
     private String Time; //is this an int? *It looks more like a string...we have to extract it
     private int Media; //does it require a media room, 1 = yes 0 = no  
     
-    public Sections (int courseNum, int numEnro, String departm, String callNum, String days, String time, int media){
+    public Sections (String courseNum, int numEnro, String departm, String callNum, String days, String time, int media){
     CourseNumber = courseNum;
     NumberEnrolled=numEnro;
     Dept= departm;
@@ -31,11 +31,11 @@ public class Sections{
     
     }
 
-    public int getCourseNumber() {
+    public String getCourseNumber() {
         return CourseNumber;
     }
 
-    public void setCourseNumber(int CourseNumber) {
+    public void setCourseNumber(String CourseNumber) {
         this.CourseNumber = CourseNumber;
     }
 
@@ -62,6 +62,14 @@ public class Sections{
     public void setCallNumber(String CallNumber) {
         this.CallNumber = CallNumber;
     }
+
+    /*public float getDaysTime() {
+        return DaysTime;
+    }
+
+    public void setDaysTime(float DaysTime) {
+        this.DaysTime = DaysTime;
+    }*/
 
     public String getDays() {
         return Days;

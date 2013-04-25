@@ -11,7 +11,9 @@ package DataLayer;
 public class Preferences {
     
 private String Department;
-private String InstructorName;
+private String InstructorFirstName;
+private String InstructorLastName;
+private char InstructorMiddleInt;
 private int NumberOfSectionsToTeach;
 private int NorthCampus; //either 0 or 1
 private int SouthCampus;
@@ -19,10 +21,12 @@ private int WestCampus;
 private int EastCampus;
 private int Weekend;
 
-public Preferences(String dept, String name, int numSec, int n, int s, int w, int e, int saturd) {
+public Preferences(String dept, String fName, String lName, char m, int numSec, int n, int s, int w, int e, int saturd) {
     
     Department=dept;
-    InstructorName=name;
+    InstructorFirstName=fName;
+    InstructorLastName= lName;
+    InstructorMiddleInt = m;
     NumberOfSectionsToTeach=numSec;
     NorthCampus=n;
     SouthCampus= s;
@@ -39,13 +43,7 @@ public Preferences(String dept, String name, int numSec, int n, int s, int w, in
         this.Department = Department;
     }
 
-    public String getInstructorName() {
-        return InstructorName;
-    }
-
-    public void setInstructorName(String InstructorName) {
-        this.InstructorName = InstructorName;
-    }
+  
 
     public int getNumberOfSectionsToTeach() {
         return NumberOfSectionsToTeach;
@@ -57,6 +55,30 @@ public Preferences(String dept, String name, int numSec, int n, int s, int w, in
 
     public int getNorthCampus() {
         return NorthCampus;
+    }
+
+    public String getInstructorFirstName() {
+        return InstructorFirstName;
+    }
+
+    public void setInstructorFirstName(String InstructorFirstName) {
+        this.InstructorFirstName = InstructorFirstName;
+    }
+
+    public String getInstructorLastName() {
+        return InstructorLastName;
+    }
+
+    public void setInstructorLastName(String InstructorLastName) {
+        this.InstructorLastName = InstructorLastName;
+    }
+
+    public char getInstructorMiddleInt() {
+        return InstructorMiddleInt;
+    }
+
+    public void setInstructorMiddleInt(char InstructorMiddleInt) {
+        this.InstructorMiddleInt = InstructorMiddleInt;
     }
 
     public void setNorthCampus(int NorthCampus) {

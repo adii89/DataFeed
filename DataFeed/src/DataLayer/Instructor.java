@@ -13,17 +13,21 @@ public class Instructor {
     private String _InstructorFirstName;
     private String _InstructorLastName;
     private char _InstructorMiddleInt;
-    private int NumberOfCoursesToTeach; //preference in number of courses to teach
-    
+    private String _Department;
+    private Preferences _InstrucPref; //
+    // private Preferences instrucPref;
             
 
-public Instructor (int id, String fName, String lName, char mName, int numberCoursesTeach){
+public Instructor (int id, String fName, String lName, char mName, String dep, Preferences instPref){
 
 _InstructorId = id;
 _InstructorFirstName = fName;
 _InstructorLastName = lName;
 _InstructorMiddleInt = mName;
-NumberOfCoursesToTeach = numberCoursesTeach;
+_Department= dep;
+_InstrucPref=instPref;
+
+
 }
 
     public int getInstructorId() {
@@ -36,6 +40,22 @@ NumberOfCoursesToTeach = numberCoursesTeach;
 
     public String getInstructorFirstName() {
         return _InstructorFirstName;
+    }
+
+    public String getDepartment() {
+        return _Department;
+    }
+
+    public void setDepartment(String _Department) {
+        this._Department = _Department;
+    }
+
+    public Preferences getInstrucPref() {
+        return _InstrucPref;
+    }
+
+    public void setInstrucPref(Preferences _InstrucPref) {
+        this._InstrucPref = _InstrucPref;
     }
 
     public void setInstructorFirstName(String _InstructorFirstName) {
@@ -56,14 +76,6 @@ NumberOfCoursesToTeach = numberCoursesTeach;
 
     public void setInstructorMiddleInt(char _InstructorMiddleInt) {
         this._InstructorMiddleInt = _InstructorMiddleInt;
-    }
-
-    public int getNumberOfCoursesToTeach() {
-        return NumberOfCoursesToTeach;
-    }
-
-    public void setNumberOfCoursesToTeach(int NumberOfCoursesToTeach) {
-        this.NumberOfCoursesToTeach = NumberOfCoursesToTeach;
     }
 
 

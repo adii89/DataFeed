@@ -14,5 +14,9 @@ public class Travel {
     private String East; 
     private String West;
    
+    public Travel(){
+    ///North=
+        
+    }
     
 }

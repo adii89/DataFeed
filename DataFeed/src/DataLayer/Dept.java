@@ -11,6 +11,6 @@ package DataLayer;
 public class Dept {
     
     private String DeptName; //name of the department i.e. ACT
-    
+    //private String
     
 }
