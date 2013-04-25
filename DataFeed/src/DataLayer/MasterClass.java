@@ -165,7 +165,7 @@ public static void main(String[] args)throws IOException{
                                  case 4:
                                      //"C:\\instructors.txt"
                                     counterInstructorPref=0;
-                                     String[] instructor=line.split("\\|");
+                                    String[] instructor=line.split("\\|");
                                     String depart=instructor[0].trim();
                                     String fullNameI=instructor[1].trim();
                                     String[] nameI=fullNameI.split(delims);
