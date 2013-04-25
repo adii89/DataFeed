@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import com.microsoft.sqlserver.jdbc.*;
 /**
  *
  * @author Adi
@@ -33,18 +34,17 @@ public class Database {
     private void CloseConnection() throws SQLException{
         try {
             if (resultSet != null){
-            resultSet.close();
-        }
-        if (Stmt != null) {
-            Stmt.close();
-        }
-        if (Conn != null){
-            Conn.close();
-        }
+                resultSet.close();
+            }
+            if (Stmt != null) {
+                Stmt.close();
+            }
+            if (Conn != null){
+                Conn.close();
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
     }
     
     //TODO: BeginTransaction
