@@ -1,10 +1,7 @@
 package Test;
 
+import DataAccess.Database;
 import java.sql.*;
-import Config.ConfigManager;
-import Security.Cryptography;
-import java.security.MessageDigest;
-import java.util.Arrays;
 /**
  *
  * @author Adrian Krzeszkiewicz
@@ -15,12 +12,16 @@ import java.util.Arrays;
 public class TestConnection {
     
     public static void main(String[] args) {
-        boolean a = true;
+        boolean a = false;
         if (a) {
             try {
-                String DBUsername = "F8nYTdeuGgD/NQdqm1IhLLUTRVXAvVsFGNH0TtIIe8E=";
-                String encrypted = Cryptography.Decrypt(DBUsername);
-                System.out.println(encrypted);
+                Database DB = new Database();
+                DB.ConnString = "jdbc:sqlserver://ADI-LAPTOP\\SQLEXPRESS;database=pfuenrolldb;integratedSecurity=true;";
+                ResultSet rs = DB.SelectSQL("SELECT * FROM Test");
+                while (rs.next()) {
+                    System.out.println(rs.getInt(1));
+                    System.out.println(rs.getString(2));
+                }
             } catch (Exception ex) {
                 
             }

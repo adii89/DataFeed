@@ -1,6 +1,7 @@
 package Logger;
 
 import DataAccess.ConnectionString;
+import DataAccess.DatabaseHelper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,9 +20,9 @@ public class ErrorLog {
         try {
             Conn = DriverManager.getConnection(ConnectionString.GetConnString());
             Conn.setAutoCommit(false);
-            PreparedStatement prepStmt = Conn.prepareStatement("INSERT INTO ErrorLog VALUES (\"?, ?, GETDATE())");
-            prepStmt.setString(1, e.getMessage());
-            prepStmt.setString(2, GetStackTrace(e.getStackTrace()));
+            PreparedStatement prepStmt = Conn.prepareStatement("INSERT INTO ErrorLog VALUES (?, ?)");
+            prepStmt.setString(1, DatabaseHelper.Quote(e.getMessage()));
+            prepStmt.setString(2, DatabaseHelper.Quote(GetStackTrace(e.getStackTrace())));
             prepStmt.executeUpdate();
             Conn.commit();
             prepStmt.close();
