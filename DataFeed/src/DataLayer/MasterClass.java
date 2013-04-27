@@ -14,7 +14,7 @@ import java.text.*;
 public class MasterClass {
  
      private static ArrayList<Rooms> rooms = new ArrayList<Rooms>();
-     private static ArrayList<Instructor> instructors = new ArrayList<Instructor>();
+     private static ArrayList<InstructorGeneralPreferences> instructorsGeneralP = new ArrayList<InstructorGeneralPreferences>();
      private static ArrayList<Sections> sections = new ArrayList<Sections>();
      private static ArrayList<Courses> courses = new ArrayList<Courses>();
     
@@ -29,11 +29,11 @@ public static void main(String[] args)throws IOException{
    String[] filesArray = {"C:\\rooms.txt",  "C:\\preferences.txt", "C:\\sections.txt", "C:\\enroll.txt", "C:\\travel.txt", "C:\\instructors.txt"};
    String pathFile;
    String[] yesNoCampus= new String[6]; //preferences on campus location...the last entry on the array will make reference the weekend availability
-   Preferences[] prefe= new Preferences[1000];
-   Preferences p;
-   Instructor instruct;
+   //Preferences[] prefe= new Preferences[1000];
+   //Preferences p;
+   ///Instructor instruct;
    int counterInstructorPref=0;
-   for (int i =0; i<5; i ++){
+   for (int i =0; i<4; i ++){
     
         pathFile = filesArray[i];//holds the current file
 
@@ -70,15 +70,16 @@ public static void main(String[] args)throws IOException{
                              case 1:
                                 //reads "C:\\preferences.txt"
                                      
-                                String[] preference = line.split("\\|");
-                                //, int n, int s, int w, int e, int saturd
+                                String[] preference = line.split("\\|");//takes the line and splits it by the "|" character
+                                
                                 String departm=preference[0].trim();
-                                String fullName=preference[1].trim();
-                                String[] name=fullName.split(delims);
+                                String fullName=preference[1].trim();//reads full name
+                                String[] name=fullName.split(delims);//parse the instructor's name using as a delimiter the space
                                 String lName= name[0];
                                 String fName= name[1];
                                 char mInitial = name[2].trim().charAt(0); // s.charAt(0);
                                 int numSecToTeach=Integer.parseInt(preference[2].trim());
+                                
                                 int v=3;
                                 for(int j=0; j<5;j++){
                                 
@@ -90,6 +91,7 @@ public static void main(String[] args)throws IOException{
                                
                                 int north=0, south=0, east=0, west=0, weekend=0;
                                 for(int j=0; j<5; j++){
+                                String preferenceLocation =" ";
                                 
                                     if (yesNoCampus[j]=="Yes")
                                     
@@ -97,8 +99,10 @@ public static void main(String[] args)throws IOException{
 
                                             case 0:
                                                 north=0;
+                                                preferenceLocation="north ";
                                             case 1:
                                                 south=0;
+                                                preferenceLocation =  preferenceLocation +"south";
                                             case 2:
                                                 east=0;
 
@@ -127,8 +131,10 @@ public static void main(String[] args)throws IOException{
                                         }//end switch
                                 }//end for
                                
-                                prefe[counterInstructorPref] = new Preferences(departm, lName, fName, mInitial, numSecToTeach, north, south, east, west, weekend);
-                                counterInstructorPref++;                               
+                                 
+                                 
+                               // prefe[counterInstructorPref] = new Preferences(departm, lName, fName, mInitial, numSecToTeach, north, south, east, west, weekend);
+                                //counterInstructorPref++;                               
                               
                                  case 2:
                                      //"C:\\sections.txt"
@@ -162,21 +168,21 @@ public static void main(String[] args)throws IOException{
                                      
                                  
                                      
-                                 case 4:
+                                 //
                                      //"C:\\instructors.txt"
-                                    counterInstructorPref=0;
-                                    String[] instructor=line.split("\\|");
-                                    String depart=instructor[0].trim();
-                                    String fullNameI=instructor[1].trim();
-                                    String[] nameI=fullNameI.split(delims);
-                                    String lNameI= nameI[0];
-                                    String fNameI= nameI[1];
-                                    char mInitialI = nameI[2].trim().charAt(0);///****ASSUMPTION: Sll instructors have middle initial
-                                    int temp=0; //*************TEMPORARY VARIABLE...VALERIE HAS TO ASK ADRIAN ABOUT IT
-                                    p = prefe[counterInstructorPref];
-                                   Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
-                                    
-                                    /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
+//                                    counterInstructorPref=0;
+//                                    String[] instructor=line.split("\\|");
+//                                    String depart=instructor[0].trim();
+//                                    String fullNameI=instructor[1].trim();
+//                                    String[] nameI=fullNameI.split(delims);
+//                                    String lNameI= nameI[0];
+//                                    String fNameI= nameI[1];
+//                                    char mInitialI = nameI[2].trim().charAt(0);///****ASSUMPTION: Sll instructors have middle initial
+//                                    int temp=0; //*************TEMPORARY VARIABLE...VALERIE HAS TO ASK ADRIAN ABOUT IT
+//                                    p = prefe[counterInstructorPref];
+//                                   Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
+//                                    
+//                                    /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
                         }
                         
                        

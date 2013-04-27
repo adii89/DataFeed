@@ -8,32 +8,35 @@ package DataLayer;
  *
  * @author Erik
  */
-public class Preferences {
+public class InstructorGeneralPreferences {
     
 private String Department;
 private String InstructorFirstName;
 private String InstructorLastName;
 private char InstructorMiddleInt;
 private int NumberOfSectionsToTeach;
-private int NorthCampus; //either 0 or 1
-private int SouthCampus;
-private int WestCampus;
-private int EastCampus;
 private int Weekend;
+private InstructorCampusPreference campusPref;
 
-public Preferences(String dept, String fName, String lName, char m, int numSec, int n, int s, int w, int e, int saturd) {
+
+public InstructorGeneralPreferences(String dept, String fName, String lName, char m, int numSec, int saturd, InstructorCampusPreference campusP) {
     
     Department=dept;
     InstructorFirstName=fName;
     InstructorLastName= lName;
     InstructorMiddleInt = m;
     NumberOfSectionsToTeach=numSec;
-    NorthCampus=n;
-    SouthCampus= s;
-    WestCampus=w;
-    EastCampus=e;       
     Weekend=saturd;
+    campusPref=campusP;
 }
+
+    public InstructorCampusPreference getCampusPref() {
+        return campusPref;
+    }
+
+    public void setCampusPref(InstructorCampusPreference campusPref) {
+        this.campusPref = campusPref;
+    }
 
     public String getDepartment() {
         return Department;
@@ -53,9 +56,7 @@ public Preferences(String dept, String fName, String lName, char m, int numSec, 
         this.NumberOfSectionsToTeach = NumberOfSectionsToTeach;
     }
 
-    public int getNorthCampus() {
-        return NorthCampus;
-    }
+   
 
     public String getInstructorFirstName() {
         return InstructorFirstName;
@@ -81,33 +82,7 @@ public Preferences(String dept, String fName, String lName, char m, int numSec, 
         this.InstructorMiddleInt = InstructorMiddleInt;
     }
 
-    public void setNorthCampus(int NorthCampus) {
-        this.NorthCampus = NorthCampus;
-    }
 
-    public int getSouthCampus() {
-        return SouthCampus;
-    }
-
-    public void setSouthCampus(int SouthCampus) {
-        this.SouthCampus = SouthCampus;
-    }
-
-    public int getWestCampus() {
-        return WestCampus;
-    }
-
-    public void setWestCampus(int WestCampus) {
-        this.WestCampus = WestCampus;
-    }
-
-    public int getEastCampus() {
-        return EastCampus;
-    }
-
-    public void setEastCampus(int EastCampus) {
-        this.EastCampus = EastCampus;
-    }
 
     public int getWeekend() {
         return Weekend;
