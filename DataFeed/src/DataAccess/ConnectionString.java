@@ -7,69 +7,59 @@ package DataAccess;
 import Security.Cryptography;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
+import Config.ConfigManager;
 
 /**
  *
  * @author Adi
  */
 public class ConnectionString {
-    private static Properties Prop = new Properties();
     //Get Username
-    private static String GetDBUsername() throws Exception {
+    private static String GetDBUsername() {
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            return ConfigManager.GetConfgElement("DBUsername");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return Cryptography.Decrypt(Prop.getProperty("DBUsername"));
+        
     }
     //get the password
     private static String GetDBPassword() throws Exception {
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            return ConfigManager.GetConfgElement("DBPassword");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return Cryptography.Decrypt(Prop.getProperty("DBUsername"));
     }
     //get the server
     private static String GetDBServer() {
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            return ConfigManager.GetConfgElement("DBServer");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return Prop.getProperty("DBServerName");
     }
     //Get Database Name
     private static String GetDBName() {
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            return ConfigManager.GetConfgElement("DBName");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return Prop.getProperty("DBName");
     }
     //Get Connection String
     public static String GetConnString() throws Exception {
+        String ConnString = null;
         try {
-            Prop.load(new FileInputStream("config.properties"));
+            ConnString = ConfigManager.GetConfgElement("DBUsername");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.ErrorLog.LogError(ex);
             return null;
         }
-        return String.format(Prop.getProperty("DBConnectionString"), GetDBServer(), GetDBName(), GetDBUsername(), GetDBPassword());
+        return String.format(ConnString, GetDBServer(), GetDBName(), GetDBUsername(), GetDBPassword());
     }
-    //TODO: Encrypt Values
-    //TODO: Database Open
-    //TODO: Database Close
-    //TODO: Database Begin Tran
-    //TODO: Database Commit Tran
-    //TODO: Database Rollback Tran
-    //TODO: If DB Open
 }

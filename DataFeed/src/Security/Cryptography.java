@@ -7,6 +7,8 @@ import java.util.Properties;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import sun.misc.*;
+import Config.ConfigManager;
+import java.util.Arrays;
 /**
  *
  * @author Adrian Krzeszkiewicz
@@ -18,23 +20,25 @@ import sun.misc.*;
 public class Cryptography {
     
     private static Key GetKey() throws Exception {
-        Properties Prop = new Properties();
-        try {
-            Prop.load(new FileInputStream("config.properties"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        String keyString = Prop.getProperty("ivKey");
-        return new SecretKeySpec(keyString.getBytes(), "AES");
+        byte[] keyString = ConfigManager.GetConfgElement("ivKey").getBytes("UTF-8");
+        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+        keyString = sha.digest(keyString);
+        keyString = Arrays.copyOf(keyString, 16);
+        return new SecretKeySpec(keyString, "AES");
     }
     
     //Encrypt Function
     public static String Encrypt(String Data) throws Exception{
         Key k = GetKey();
         Cipher aesCipher = Cipher.getInstance("AES");
-        aesCipher.init(Cipher.ENCRYPT_MODE, k);
-        byte[] encryptedVal = aesCipher.doFinal(Data.getBytes());
+        byte[] encryptedVal = null;
+        try {
+            aesCipher.init(Cipher.ENCRYPT_MODE, k);
+            encryptedVal = aesCipher.doFinal(Data.getBytes());
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return new BASE64Encoder().encode(encryptedVal);
     }
     

@@ -170,6 +170,7 @@ public static void main(String[] args)throws IOException{
                                      
                                  //
                                      //"C:\\instructors.txt"
+<<<<<<< HEAD
 //                                    counterInstructorPref=0;
 //                                    String[] instructor=line.split("\\|");
 //                                    String depart=instructor[0].trim();
@@ -183,6 +184,21 @@ public static void main(String[] args)throws IOException{
 //                                   Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
 //                                    
 //                                    /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
+=======
+                                    counterInstructorPref=0;
+                                    String[] instructor=line.split("\\|");
+                                    String depart=instructor[0].trim();
+                                    String fullNameI=instructor[1].trim();
+                                    String[] nameI=fullNameI.split(delims);
+                                    String lNameI= nameI[0];
+                                    String fNameI= nameI[1];
+                                    char mInitialI = nameI[2].trim().charAt(0);///****ASSUMPTION: Sll instructors have middle initial
+                                    int temp=0; //*************TEMPORARY VARIABLE...VALERIE HAS TO ASK ADRIAN ABOUT IT
+                                    p = prefe[counterInstructorPref];
+                                   //Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
+                                    
+                                    /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
+>>>>>>> 98f323f32889f5c2fd15585630f0dca2864272b0
                         }
                         
                        

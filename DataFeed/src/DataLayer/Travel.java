@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package DataLayer;
 
 /**
@@ -13,6 +9,7 @@ package DataLayer;
  * These two values were concatenated in order to simplify the "if else if"
  */
 public class Travel {
+<<<<<<< HEAD
     
     private static double[][] travelCampusDistance = {{0, 1, 2, 3}, {1, 0, 1.5, 2}, {2, 1.5, 0, 2.5}, {3, 2, 2.5,0}};
 
@@ -72,6 +69,43 @@ public static double getTravelDistance(int destinationCampus, int departCampus){
 //
 //
 //        return 0;
+=======
+public static double getTravelDistance(int destinationCampus, int departCampus){
+
+    
+    int travelLocations = Integer.parseInt(Integer.toString(destinationCampus) + Integer.toString(departCampus));
+    
+    if(travelLocations == 11 || travelLocations==22){
+
+        return 0;}
+    else if(travelLocations== 33 || travelLocations==44){
+        return 0;
+        }
+    else if(travelLocations== 12 || travelLocations== 21){
+        return 1;
+    }
+      else if(travelLocations== 13 || travelLocations== 31){
+        return 3;
+    } 
+    else if(travelLocations== 14 || travelLocations== 41){
+        return 2;
+    }
+    
+    else if(travelLocations== 23 || travelLocations== 32){
+        return 2;
+    }
+    else if(travelLocations== 24 || travelLocations== 42){
+        return 1.5;
+    }
+    
+    else if(travelLocations== 34 || travelLocations== 43){
+        return 2.5;
+    }
+        
+
+    
+    return 0;
+>>>>>>> 98f323f32889f5c2fd15585630f0dca2864272b0
 
 }//end getTravelDistance
 }//end Travel class
