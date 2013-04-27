@@ -12,17 +12,16 @@ package DataLayer;
 public class Sections{ 
     
     private String CourseNumber;
-    private int NumberEnrolled;
+   
     private String Dept;
     private String CallNumber; 
     
     private String Days; 
-    private String Time; //is this an int? *It looks more like a string...we have to extract it
-    private int Media; //does it require a media room, 1 = yes 0 = no  
+    private String Time; //
+    private boolean Media; //  
     
-    public Sections (String courseNum, int numEnro, String departm, String callNum, String days, String time, int media){
+    public Sections (String courseNum, String departm, String callNum, String days, String time, boolean media){
     CourseNumber = courseNum;
-    NumberEnrolled=numEnro;
     Dept= departm;
     CallNumber= callNum;
     Days=days;
@@ -39,15 +38,7 @@ public class Sections{
         this.CourseNumber = CourseNumber;
     }
 
-    public int getNumberEnrolled() {
-        return NumberEnrolled;
-    }
-
-    public void setNumberEnrolled(int NumberEnrolled) {
-        this.NumberEnrolled = NumberEnrolled;
-    }
-
-    public String getDept() {
+   public String getDept() {
         return Dept;
     }
 
@@ -62,14 +53,6 @@ public class Sections{
     public void setCallNumber(String CallNumber) {
         this.CallNumber = CallNumber;
     }
-
-    /*public float getDaysTime() {
-        return DaysTime;
-    }
-
-    public void setDaysTime(float DaysTime) {
-        this.DaysTime = DaysTime;
-    }*/
 
     public String getDays() {
         return Days;
@@ -87,13 +70,27 @@ public class Sections{
         this.Time = Time;
     }
 
-    public int getMedia() {
+    public boolean getMedia() {
         return Media;
     }
 
-    public void setMedia(int Media) {
+    public void setMedia(boolean Media) {
         this.Media = Media;
     }
     
+     @Override 
+    public String toString(){
+         
+        StringBuilder i = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        i.append("Course number: " + getCourseNumber() + NEW_LINE);
+        i.append("Department:    " + getDept() + NEW_LINE);
+        i.append("Call number:   " + getCallNumber() + NEW_LINE);
+        i.append("Meeting Days:  " + getDays() + NEW_LINE);
+        i.append("Meeting Time:  " + getTime() + NEW_LINE);
+        i.append("Media:         " + getMedia() + NEW_LINE);
+        
+        return i.toString();
+    }
     
 }

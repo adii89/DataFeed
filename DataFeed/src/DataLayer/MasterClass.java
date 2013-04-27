@@ -13,11 +13,13 @@ import java.text.*;
  */
 public class MasterClass {
  
-     private static ArrayList<Rooms> rooms = new ArrayList<Rooms>();
-     private static ArrayList<Instructor> instructors = new ArrayList<Instructor>();
-     private static ArrayList<Sections> sections = new ArrayList<Sections>();
-     private static ArrayList<Courses> courses = new ArrayList<Courses>();
+    private static ArrayList<Rooms> rooms = new ArrayList<Rooms>();
+    private static ArrayList<InstructorGeneralPreferences> instructorsGeneralP = new ArrayList<InstructorGeneralPreferences>();
+    private static ArrayList<Sections> sections = new ArrayList<Sections>();
+    private static ArrayList<Courses> courses = new ArrayList<Courses>();
     
+    //private static 
+ 
 public static void main(String[] args)throws IOException{
         
 /*/Store the path for the input files in a String array.  This can done in another way 
@@ -26,26 +28,25 @@ public static void main(String[] args)throws IOException{
     * The reading of the files can also be done using a separate class.  Later on it can be improved.  Valerie
     * 
     */
-   String[] filesArray = {"C:\\rooms.txt",  "C:\\preferences.txt", "C:\\sections.txt", "C:\\enroll.txt", "C:\\travel.txt", "C:\\instructors.txt"};
+   String[] filesArray = {"C:\\rooms.txt",  "C:\\preferences.txt", "C:\\sections.txt", "C:\\enroll.txt"};
    String pathFile;
-   String[] yesNoCampus= new String[6]; //preferences on campus location...the last entry on the array will make reference the weekend availability
-   Preferences[] prefe= new Preferences[1000];
-   Preferences p;
-   Instructor instruct;
-   int counterInstructorPref=0;
-   for (int i =0; i<5; i ++){
+ 
+   
+  
+   for (int i =0; i<4; i ++){
     
         pathFile = filesArray[i];//holds the current file
 
-        Scanner path= new Scanner(new File(pathFile));
+        
         File checkFile= new File(pathFile);
-        String tempString;
+      
 
             if(checkFile.exists()){
                 
                 
                  BufferedReader br= new BufferedReader(new FileReader(pathFile));
                  String line= br.readLine(); //reads column names
+                 String columns[] = line.split("\\|");//gets the name of the columns, this will be used when reading preferences.txt
                  line= br.readLine(); //reads first line of records
                  String delims = " "; //for parsing the Instructor's name
                     while(line!=null){
@@ -55,147 +56,104 @@ public static void main(String[] args)throws IOException{
                             case 0:
                                 //reads "C:\\rooms.txt"
                                 String[] room = line.split("\\|");
-                                         
-                                int roomN =  Integer.parseInt(room[0].trim());///trim?
+                                   
+                                int roomN =  Integer.parseInt(room[0].trim());
                                 String roomBuild= room[1].trim();
-                                //tempString=room[2];
+                                
                                 int capacity =  Integer.parseInt(room[2].trim());
                                 String campus = room[3].trim();
-                                tempString=room[4].trim();
-                                int media  =    Integer.parseInt(room[4].trim());                           
+                                boolean media = true;
+                                if(room[4].trim()=="NO"){
+                                media = false;
+                                }//end if
+                                                               
                                 Rooms r = new Rooms(roomN, roomBuild,capacity, campus, media);
+                                System.out.println(r.toString());
                                 rooms.add(r);
-                                rooms.toString();///to check if it's working
-                         
+                                
+                                break;
+                                
                              case 1:
-                                //reads "C:\\preferences.txt"
-                                     
-                                String[] preference = line.split("\\|");
-                                //, int n, int s, int w, int e, int saturd
-                                String departm=preference[0].trim();
-                                String fullName=preference[1].trim();
-                                String[] name=fullName.split(delims);
-                                String lName= name[0];
-                                String fName= name[1];
-                                char mInitial = name[2].trim().charAt(0); // s.charAt(0);
-                                int numSecToTeach=Integer.parseInt(preference[2].trim());
-                                int v=3;
-                                for(int j=0; j<5;j++){
-                                
-                                   
-                                    yesNoCampus[j]= preference[v].trim();
-                                    v++;
-                                                     
-                                  } // end for chechink campus preference
-                               
-                                int north=0, south=0, east=0, west=0, weekend=0;
-                                for(int j=0; j<5; j++){
-                                
-                                    if (yesNoCampus[j]=="Yes")
-                                    
-                                        switch(j) {
+                                        //reads "C:\\preferences.txt"
 
-                                            case 0:
-                                                north=0;
-                                            case 1:
-                                                south=0;
-                                            case 2:
-                                                east=0;
+                                        String[] preference = line.split("\\|");//takes the line and splits it by the "|" character
 
-                                            case 3:
-                                                west=0;
-                                            case 4:
-                                                weekend=0;
+                                        String departm=preference[0].trim();
+                                        String fullName=preference[1].trim();//reads full name
+                                        String[] name=fullName.split(delims);//parse the instructor's name using as a delimiter the space
+                                        String lName= name[0];
+                                        String fName= name[1];
+                                        char mInitial = name[2].trim().charAt(0); // s.charAt(0);
+                                        int numSecToTeach=Integer.parseInt(preference[2].trim());
+                                        int v=3;
+                                        
+                                        String campusP=columns[3].trim();
+                                        String preferenceCampus;
+                                        ArrayList<String> p = new ArrayList<String>();
+                                            for(int j=0; j<4;j++){
+                                                preferenceCampus=preference[v].trim();
+                                                if(preferenceCampus.equalsIgnoreCase("yes")){
+                                                    
+                                                    campusP=columns[v].substring(0, 5).trim();
+                                                    p.add(campusP.trim());                                                          }
+                                                v++;} // end for checking campus preference
 
+                                        
+                                        int weekend=0;
+                                        String preferenceW = preference[7].trim();                                                             
+                                        if(preferenceW.equalsIgnoreCase("no")){
+                                                weekend=1;}
+                                                //end if
+                            
+                                        InstructorGeneralPreferences instruct= new InstructorGeneralPreferences(departm, lName, fName, mInitial, numSecToTeach, weekend, p);
+                                        System.out.println(instruct.toString());
+                                        instructorsGeneralP.add(instruct);
 
-                                        }//end switch
-                                    else //"No"
-                                        switch(j) {
+                                         break;
+                                     case 2:
+                                         
+                                             //"C:\\sections.txt"
+                                             String[] section = line.split("\\|");
+                                             String courseN= section[0].trim();
+                                             String department = section[1].trim();
 
-                                            case 0:
-                                                north=1;
-                                            case 1:
-                                                south=1;
-                                            case 2:
-                                                east=1;
+                                             String callNumber =section[2].trim();
+                                             String days= section[3];
+                                             String time = section[4];
+                                             media = true;
+                                              if(section[5].trim()=="NO"){
+                                                 media = false;
+                                                    }//end if
 
-                                            case 3:
-                                                west=1;
-                                            case 4:
-                                                weekend=1;
+                                             Sections s= new Sections(courseN, department, callNumber,days, time, media);
+                                             System.out.println(s.toString());
+                                             sections.add(s);
 
-                                        }//end switch
-                                }//end for
-                               
-                                prefe[counterInstructorPref] = new Preferences(departm, lName, fName, mInitial, numSecToTeach, north, south, east, west, weekend);
-                                counterInstructorPref++;                               
-                              
-                                 case 2:
-                                     //"C:\\sections.txt"
-                                     
-                                     //int courseNum, int numEnro, String departm, String callNum, String days, String time, int media
-                                     String[] section = line.split("\\|");
-                                     String courseN= section[0].trim();
-                                     int numEnrolled =Integer.parseInt(section[1].trim());
-                                     String department = section[2].trim();
-                                     String callNumber =section[3].trim();
-                                     String days= section[4];
-                                     String time = section[5];
-                                     media = Integer.parseInt(section[6].trim());
-                                     Sections s= new Sections(courseN,numEnrolled, department, callNumber,days, time, media);
-                                     sections.add(s);
-                                     sections.toString();
-                                                                    
-                                                                     
-                                     
+                                             break;
                                  case 3:
-                                     //"C:\\enroll.txt"
-                                     //String courseNum, String depart, int numEnro
-                                     String[] course=line.split("\\|");
-                                     String courseNum = course[0].trim();
-                                     String departmen = course[1].trim();
-                                     int numEnrol= Integer.parseInt(course[2].trim());
-                                     Courses c = new Courses(courseNum, departmen, numEnrol);
-                                     courses.add(c);
-                                     //courses
                                      
-                                     
-                                 
-                                     
-                                 case 4:
-                                     //"C:\\instructors.txt"
-                                    counterInstructorPref=0;
-                                    String[] instructor=line.split("\\|");
-                                    String depart=instructor[0].trim();
-                                    String fullNameI=instructor[1].trim();
-                                    String[] nameI=fullNameI.split(delims);
-                                    String lNameI= nameI[0];
-                                    String fNameI= nameI[1];
-                                    char mInitialI = nameI[2].trim().charAt(0);///****ASSUMPTION: Sll instructors have middle initial
-                                    int temp=0; //*************TEMPORARY VARIABLE...VALERIE HAS TO ASK ADRIAN ABOUT IT
-                                    p = prefe[counterInstructorPref];
-                                   //Instructor instruct = new Instructor(temp, depart, lNameI, fNameI, mInitialI,p);
-                                    
-                                    /// counterInstructorPref++; //******ASSUMPTION: the instructor file and the preference file are "in order"
-                        }
-                        
+                                             String[] course=line.split("\\|");
+                                             String courseNum = course[0].trim();
+                                             String departmen = course[1].trim();
+                                             int numEnrol= Integer.parseInt(course[2].trim());
+                                             Courses c = new Courses(courseNum, departmen, numEnrol);
+                                             System.out.println(c.toString());
+                                             courses.add(c);
+                                            break;
+                                                                
+                        }//end switch
                        
-                        
-                        
-                        line= br.readLine();//read next record
+                        line= br.readLine();//read next record in the file
                     }//end while loop
-
+   
 
             }//end if
 
  
-    }//end for
+    }//end for loop that iterates through each file of the aaray of files
 
-
          
-         
-         
-    }
+    }//end public static void main
     
-
-}
+//
+}//end MasterClass

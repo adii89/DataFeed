@@ -1,5 +1,7 @@
 package DataLayer;
 
+import Exceptions.ApplicationException;
+
 /**
  *
  * @author hdflournoy
@@ -9,41 +11,27 @@ package DataLayer;
  * These two values were concatenated in order to simplify the "if else if"
  */
 public class Travel {
-public static double getTravelDistance(int destinationCampus, int departCampus){
 
     
-    int travelLocations = Integer.parseInt(Integer.toString(destinationCampus) + Integer.toString(departCampus));
-    
-    if(travelLocations == 11 || travelLocations==22){
+    private static double[][] travelCampusDistance = {{0, 1, 2, 3}, {1, 0, 1.5, 2}, {2, 1.5, 0, 2.5}, {3, 2, 2.5,0}};
 
-        return 0;}
-    else if(travelLocations== 33 || travelLocations==44){
-        return 0;
-        }
-    else if(travelLocations== 12 || travelLocations== 21){
-        return 1;
-    }
-      else if(travelLocations== 13 || travelLocations== 31){
-        return 3;
-    } 
-    else if(travelLocations== 14 || travelLocations== 41){
-        return 2;
-    }
-    
-    else if(travelLocations== 23 || travelLocations== 32){
-        return 2;
-    }
-    else if(travelLocations== 24 || travelLocations== 42){
-        return 1.5;
-    }
-    
-    else if(travelLocations== 34 || travelLocations== 43){
-        return 2.5;
-    }
-        
 
     
-    return 0;
+       
+    
+public static double getTravelDistance(int destinationCampus, int departCampus)throws ApplicationException{
+
+    if(destinationCampus > 4 || destinationCampus<1){
+    
+        throw new ApplicationException("Invalid Destination Campus ID");
+    }
+    if(departCampus > 4 || departCampus < 1){
+    
+        throw new ApplicationException("Invalid Departure Campus ID");
+    }
+  
+   return travelCampusDistance[destinationCampus-1][departCampus-1];
+  
 
 }//end getTravelDistance
 }//end Travel class
