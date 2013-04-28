@@ -17,7 +17,8 @@ public class MasterClass {
     private static ArrayList<InstructorGeneralPreferences> instructorsGeneralP = new ArrayList<InstructorGeneralPreferences>();
     private static ArrayList<Sections> sections = new ArrayList<Sections>();
     private static ArrayList<Courses> courses = new ArrayList<Courses>();
-    private static ArrayList<String> p = new ArrayList<String>();
+    
+    //private static 
  
 public static void main(String[] args)throws IOException{
         
@@ -29,7 +30,7 @@ public static void main(String[] args)throws IOException{
     */
    String[] filesArray = {"C:\\rooms.txt",  "C:\\preferences.txt", "C:\\sections.txt", "C:\\enroll.txt"};
    String pathFile;
-  
+ 
    
   
    for (int i =0; i<4; i ++){
@@ -86,19 +87,21 @@ public static void main(String[] args)throws IOException{
                                         int numSecToTeach=Integer.parseInt(preference[2].trim());
                                         int v=3;
                                         
-                                        String campusP;
+                                        String campusP=columns[3].trim();
                                         String preferenceCampus;
+                                        ArrayList<String> p = new ArrayList<String>();
                                             for(int j=0; j<4;j++){
                                                 preferenceCampus=preference[v].trim();
-                                                if(preferenceCampus== "YES"){
-                                                    campusP=columns[v].trim();
+                                                if(preferenceCampus.equalsIgnoreCase("yes")){
+                                                    
+                                                    campusP=columns[v].substring(0, 5).trim();
                                                     p.add(campusP.trim());                                                          }
                                                 v++;} // end for checking campus preference
 
                                         
                                         int weekend=0;
                                         String preferenceW = preference[7].trim();                                                             
-                                        if(preferenceW == "NO"){
+                                        if(preferenceW.equalsIgnoreCase("no")){
                                                 weekend=1;}
                                                 //end if
                             
