@@ -47,4 +47,18 @@ public Courses (String courseNum, String depart, int numEnro){
         this.NumberEnrolled = NumberEnrolled;
     }
     
+    @Override 
+    public String toString(){
+    
+        StringBuilder i = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        i.append("Course number:   " + getCourseNumber() + NEW_LINE);
+        i.append("Department:      " + getDepartment() + NEW_LINE);
+        i.append("Number enrolled: " + getNumberEnrolled() + NEW_LINE);
+       
+        
+        return i.toString();
+    
+    }//end toString
+    
 }

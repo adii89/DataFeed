@@ -4,6 +4,8 @@
  */
 package DataLayer;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Erik
@@ -16,10 +18,9 @@ private String InstructorLastName;
 private char InstructorMiddleInt;
 private int NumberOfSectionsToTeach;
 private int Weekend;
-private InstructorCampusPreference campusPref;
+private static ArrayList<String> preferences = new ArrayList<String>();
 
-
-public InstructorGeneralPreferences(String dept, String fName, String lName, char m, int numSec, int saturd, InstructorCampusPreference campusP) {
+public InstructorGeneralPreferences(String dept, String fName, String lName, char m, int numSec, int saturd, ArrayList<String> campusPreference) {
     
     Department=dept;
     InstructorFirstName=fName;
@@ -27,15 +28,16 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
     InstructorMiddleInt = m;
     NumberOfSectionsToTeach=numSec;
     Weekend=saturd;
-    campusPref=campusP;
+    preferences=campusPreference;
+      
 }
 
-    public InstructorCampusPreference getCampusPref() {
-        return campusPref;
+    public static ArrayList<String> getPreferences() {
+        return preferences;
     }
 
-    public void setCampusPref(InstructorCampusPreference campusPref) {
-        this.campusPref = campusPref;
+    public static void setPreferences(ArrayList<String> preferences) {
+        InstructorGeneralPreferences.preferences = preferences;
     }
 
     public String getDepartment() {
@@ -92,5 +94,21 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
         this.Weekend = Weekend;
     }
 
-
+@Override 
+    public String toString(){
+    
+        StringBuilder i = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        i.append("Instructor's Name:           " + getInstructorFirstName() + " "+ 
+                    getInstructorMiddleInt()+ " "+ getInstructorLastName() + NEW_LINE);
+        i.append("Department:                  " + getDepartment() + NEW_LINE);
+        i.append("Number of sections to teach: " + getNumberOfSectionsToTeach() + NEW_LINE);
+        i.append("Campus preferences:          " + getPreferences() + NEW_LINE);
+       
+        
+        return i.toString();
+    
+    }//end toString
+    
+    
 }
