@@ -2,6 +2,7 @@ package Test;
 
 import DataAccess.Database;
 import Exceptions.ApplicationException;
+import Security.Cryptography;
 import java.sql.*;
 /**
  *
@@ -13,7 +14,7 @@ import java.sql.*;
 public class TestConnection {
     
     public static void main(String[] args) {
-        boolean a = true;
+        boolean a = false;
         if (a) {
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -29,22 +30,24 @@ public class TestConnection {
             }
             
         } else {
-            String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=pfuenroll_dbuser;password=$aggyBa11$!1&&;";
+            
             //String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=adrian.krzeszkiewicz;password=3l3phant!!;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
             Connection conn = null;
             Statement stmt = null;
             ResultSet rs = null;
             try {
                 //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=pfuenroll_dbuser;password=" + Cryptography.Decrypt(Config.ConfigManager.GetConfgElement("DBPassword")) + ";encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+                //connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=adrian.krzeszkiewicz;password=3l3phant!!;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
                 conn = DriverManager.getConnection(connURL);
 
-                String SQL = "SELECT * FROM Test";
+                String SQL = "SELECT * FROM Campus";
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(SQL);
                 if (rs.isClosed())
                     System.out.println("CLOSED!!!");
                 while (rs.next()) {
-                    System.out.println(rs.getString(1) + " ..... " + rs.getString(3));
+                    System.out.println(rs.getString(1) + " ..... " + rs.getString(2));
                 }
                 
             } catch (Exception e) {
