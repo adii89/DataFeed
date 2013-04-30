@@ -1,6 +1,7 @@
 package Test;
 
 import DataAccess.Database;
+import Exceptions.ApplicationException;
 import java.sql.*;
 /**
  *
@@ -12,18 +13,19 @@ import java.sql.*;
 public class TestConnection {
     
     public static void main(String[] args) {
-        boolean a = false;
+        boolean a = true;
         if (a) {
             try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 Database DB = new Database();
-                DB.ConnString = "jdbc:sqlserver://ADI-LAPTOP\\SQLEXPRESS;database=pfuenrolldb;integratedSecurity=true;";
-                ResultSet rs = DB.SelectSQL("SELECT * FROM Test");
-                while (rs.next()) {
-                    System.out.println(rs.getInt(1));
-                    System.out.println(rs.getString(2));
-                }
-            } catch (Exception ex) {
+                DB.ConnString = "jdbc:sqlserver://ADI-LAPTOP;database=pfuenrolldb;user=sa;password=Krzekajka1";
+                String SQL = "DELETE FROM Test";
+                DB.SelectSQL(SQL);
                 
+            } catch (ApplicationException ex) {
+                Logger.ErrorLog.LogError(ex);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
             
         } else {
@@ -33,15 +35,18 @@ public class TestConnection {
             Statement stmt = null;
             ResultSet rs = null;
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 conn = DriverManager.getConnection(connURL);
 
                 String SQL = "SELECT * FROM Test";
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(SQL);
+                if (rs.isClosed())
+                    System.out.println("CLOSED!!!");
                 while (rs.next()) {
                     System.out.println(rs.getString(1) + " ..... " + rs.getString(3));
                 }
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

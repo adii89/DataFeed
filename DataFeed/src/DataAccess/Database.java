@@ -29,7 +29,7 @@ public class Database {
         }
     }
     //OpenConnection
-    private void OpenConnection(){
+    public void OpenConnection(){
         try {
             Conn = DriverManager.getConnection(ConnString);
             Conn.setAutoCommit(false);
@@ -40,7 +40,7 @@ public class Database {
     }
     
     //TODO: Close
-    private void CloseConnection() throws SQLException{
+    public void CloseConnection() throws SQLException{
         try {
             if (resultSet != null){
                 resultSet.close();
@@ -85,14 +85,11 @@ public class Database {
     //TODO: SelectSQL
     public ResultSet SelectSQL(String SQL) throws ApplicationException, SQLException{
         if (SQL.toUpperCase().startsWith("SELECT")) {
-            OpenConnection();
             if (Conn != null) {
                 Stmt = Conn.createStatement();
                 Stmt.setQueryTimeout(Constants.DB_TIMEOUT);
                 resultSet = Stmt.executeQuery(SQL);
-                ResultSet retVal = resultSet;
-                CloseConnection();
-                return retVal;
+                return resultSet;
             } else {
                 CloseConnection();
                 throw new ApplicationException("The Database is not open");
@@ -113,9 +110,12 @@ public class Database {
                      rowsAffected = prepStmt.executeUpdate();
                 } catch(SQLException ex) {
                     RollbackTransaction();
+                    CloseConnection();
                     throw new SQLException(ex);               
                 }           
                 if (rowsAffected == 0) {
+                    RollbackTransaction();
+                    CloseConnection();
                     throw new ApplicationException("INSERT Statement Failed");
                 }
                 int retVal = 0;
@@ -133,7 +133,7 @@ public class Database {
                 throw new ApplicationException("The Database is not open");
             }
         } else {
-            throw new ApplicationException("The statement appears not to be a SELECT statement");
+            throw new ApplicationException("The statement appears not to be a INSERT statement");
         }
     }
     //TODO: DeleteSQL
@@ -146,6 +146,7 @@ public class Database {
                 try {
                     prepStmt.executeUpdate();
                     CommitTransaction();
+                    CloseConnection();
                 } catch (SQLException ex) {
                     RollbackTransaction();
                     CloseConnection();
