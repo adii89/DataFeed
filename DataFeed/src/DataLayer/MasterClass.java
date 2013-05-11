@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package DataLayer;
+
 import java.io.*;
 import java.util.*;
 import java.text.*;
@@ -66,7 +67,6 @@ public static void main(String[] args)throws IOException{
                             case 0:
                                 //reads "C:\\rooms.txt"
                                 String[] room = line.split("\\|");
-                                   
                                 int roomN =  Integer.parseInt(room[0].trim());
                                 roomBuild= room[1].trim();
                                 
@@ -95,7 +95,7 @@ public static void main(String[] args)throws IOException{
                                 }//end switch 
                                 
                                 boolean media = true;
-                                if(room[4].trim()=="NO"){
+                                if(room[4].trim().equalsIgnoreCase("no")){
                                 media = false;
                                 }//end if
                                  //Building b = new Building(campusId); 
@@ -181,7 +181,7 @@ public static void main(String[] args)throws IOException{
                                     String days= section[3];
                                     String time = section[4];
                                     media = true;
-                                     if(section[5].trim()=="NO"){
+                                     if(section[5].equalsIgnoreCase("no")){
                                         media = false;
                                            }//end if
 
