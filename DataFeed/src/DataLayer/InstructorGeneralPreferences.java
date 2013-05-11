@@ -107,14 +107,23 @@ public InstructorGeneralPreferences(int instructorId, int dept, String fName, St
         this.Weekend = Weekend;
     }
     
-    
+    public String getUsername(){
+        
+     String username;
+     String emailPadding= "@pfu.edu";
+       
+     username= getInstructorFirstName().substring(0, 0)+ "." + getInstructorLastName()+ emailPadding;
+             
+     return username;
+    }
     
      public void InsertIntoPfuUser(){
     ///i added th throws statements...????
         String SQL;
         SQL = "INSERT INTO dbo.PfuUser (UserTypeId, DepartmentId, UserFirstName, "
                 + "UserLastName, UserMiddleInit, Username, Password, CreateDate, ModifyDate) " 
-                    + " VALUES("+ 2 + getDepartment() +  getInstructorFirstName() + getInstructorLastName() + getInstructorMiddleInt() + ")";
+                    + " VALUES("+ 2 + getDepartment() +  getInstructorFirstName() + getInstructorLastName() 
+                        + getInstructorMiddleInt() + getUsername() + "pass123" +")";
         Database DB = new Database();
         try {
            InstructorId = DB.InsertSQL(SQL);//scope identity  
