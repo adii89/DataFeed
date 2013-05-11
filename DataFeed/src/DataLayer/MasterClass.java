@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class MasterClass {
  
     private static ArrayList<Rooms> rooms = new ArrayList<Rooms>();
-    private static ArrayList<InstructorGeneralPreferences> instructorsGeneralP = new ArrayList<InstructorGeneralPreferences>();
+    private static ArrayList<Instructor> instructorsGeneralP = new ArrayList<Instructor>();
     private static ArrayList<Sections> sections = new ArrayList<Sections>();
     private static ArrayList<Courses> courses = new ArrayList<Courses>();
     
@@ -98,11 +98,8 @@ public static void main(String[] args)throws IOException{
                                 }//end switch 
                                 
                                 boolean media = true;
-<<<<<<< HEAD
-                                if(room[4].trim().equalsIgnoreCase("NO")){
-=======
+                                //if(room[4].trim().equalsIgnoreCase("NO")){
                                 if(room[4].trim().equalsIgnoreCase("no")){
->>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
                                 media = false;
                                 }//end if
                                  //Building b = new Building(campusId); 
@@ -110,21 +107,21 @@ public static void main(String[] args)throws IOException{
                                  
                                  if( roomBuild != previousBuilding){
                                      int buildI=0;
-                                    Building b= new Building(campusId, buildI);                  
-                                    b.Insert();
-                                    roomBuildingID=b.getBuildingID();
+                                    //Building b= new Building(campusId, buildI);                  
+                                    //b.Insert();
+                                    //roomBuildingID=b.getBuildingID();
                                    }//end if
                                  
                                  
                                 ////FIRST ASSING THE VALUE OF 0 TO ROOM ID, INSTANTIATE THE OBJECT AND PUT 0 IN ROOM ID, BEFORE THE INSERT CALL A SET METHOD
                                 int roomId=0;
-                                Rooms r = new Rooms(roomId, roomN, roomBuildingID,capacity, campus, media);
-                                r.Insert();
-                                r.setRoomId(roomId);
+                                //Rooms r = new Rooms(roomId, roomN, roomBuildingID,capacity, campus, media);
+                                //r.Insert();
+                                //r.setRoomId(roomId);
                               
                                 ///r.insert...EXAMPLE
-                                System.out.println(r.toString());
-                                rooms.add(r);
+                                //System.out.println(r.toString());
+                                //rooms.add(r);
                                
                                 previousBuilding=roomBuild;
                                                           
@@ -140,9 +137,9 @@ public static void main(String[] args)throws IOException{
                                     if(previousDepartment!=departm){
                                     ///different department
                                         
-                                    Department d= new Department(departm);
-                                    d.Insert();
-                                    departmentID=d.getDepartmentId();
+                                    //Department d= new Department(departm);
+                                    //d.Insert();
+                                    //departmentID=d.getDepartmentId();
                                     
                                     }//end if
                                     
@@ -172,22 +169,22 @@ public static void main(String[] args)throws IOException{
                                             weekend=1;}
                                             //end if
                                     int insID=0;
-                                    InstructorGeneralPreferences instruct= new InstructorGeneralPreferences(insID, departmentID, lName, fName, mInitial, numSecToTeach, weekend, p);
-                                    instruct.InsertIntoPfuUser();
-                                    instruct.InsertIntoPfuPreference();
+                                    //Instructor instruct= new Instructor(insID, departmentID, lName, fName, mInitial, numSecToTeach, weekend, p);
+                                    //instruct.InsertIntoPfuUser();
+                                    //instruct.InsertIntoPfuPreference();
                                     
                                  String insertSections;
                                  
                                  for (int x=0; x<=p.size(); x++){
-                                 instruct.InsertIntoPfuUserCampusPreference(p.get(x));
+                                 //instruct.InsertIntoPfuUserCampusPreference(p.get(x));
                                    
                                  
                                  }
                                  
                                  
                                     
-                                    System.out.println(instruct.toString());
-                                    instructorsGeneralP.add(instruct);
+                                    //System.out.println(instruct.toString());
+                                    //instructorsGeneralP.add(instruct);
 
                                      break;
                             case 2:
@@ -212,8 +209,7 @@ public static void main(String[] args)throws IOException{
                                                 media = false;
                                             }
 
-<<<<<<< HEAD
-                                            Sections s= new Sections(courseN, DepartmentId, CallNumber,days, time, media);
+                                            Sections s= new Sections();
                                             s.Insert();
                                             System.out.println(s.toString());
                                         } else {
@@ -225,7 +221,6 @@ public static void main(String[] args)throws IOException{
                                     } catch (ApplicationException ex) {
                                         Logger.ErrorLog.LogError(ex);
                                     }
-=======
                                     String callNumber =section[2].trim();
                                     String days= section[3];
                                     String time = section[4];
@@ -236,13 +231,12 @@ public static void main(String[] args)throws IOException{
 
                                     /////IMPORTANT HOW TO LOAD THE DEPARTMENT ID***ADRIAN
                                      
-                                     Sections s= new Sections(courseN, department, callNumber,days, time, media);
-                                    System.out.println(s.toString());
-                                    sections.add(s);
+                                     //Sections s= new Sections(courseN, department, callNumber,days, time, media);
+                                    //System.out.println(s.toString());
+                                    //sections.add(s);
 
                                     
 
->>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
                                     break;
                                case 3:
                                      
@@ -250,9 +244,9 @@ public static void main(String[] args)throws IOException{
                                     String courseNum = course[0].trim();
                                     String departmen = course[1].trim();
                                     int numEnrol= Integer.parseInt(course[2].trim());
-                                    Courses c = new Courses(courseNum, departmen, numEnrol);
-                                    System.out.println(c.toString());
-                                    courses.add(c);
+                                    //Courses c = new Courses(courseNum, departmen, numEnrol);
+                                    //System.out.println(c.toString());
+                                    //courses.add(c);
                                    break;
                                                                 
                         }//end switch

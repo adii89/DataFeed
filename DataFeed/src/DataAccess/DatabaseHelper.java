@@ -9,7 +9,13 @@ package DataAccess;
 public class DatabaseHelper {
     public static String Quote(Object obj) {
         String retVal = obj.toString();
-        retVal = "'" + retVal + "'";
+        retVal = "'" + retVal.replace("'", "''") + "'";
+        return retVal;
+    }
+    
+    public static String QuoteFilter(Object obj) {
+        String retVal = obj.toString();
+        retVal = "'%" + retVal.replace("'", "''") + "%'";
         return retVal;
     }
 }

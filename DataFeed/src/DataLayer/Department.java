@@ -5,7 +5,9 @@
 package DataLayer;
 
 import DataAccess.Database;
+import DataAccess.DatabaseHelper;
 import Exceptions.ApplicationException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -13,49 +15,84 @@ import java.sql.SQLException;
  * @author Valerie
  */
 public class Department {
+    private int DepartmentId;
+    private String DepartmentName;
     
-    private String departmentName;
-    private int scopeIdentity;
+    //public Department(String department){
+       // DepartmentName = department;
+      //}//end department
     
-    public Department(String department){
-        departmentName=department;
-
-      }//end department
+    public Department(){
+        DepartmentId = 0;
+        DepartmentName = null;
+    }
 
     public String getDepartmentName() {
-        return departmentName;
+        return DepartmentName;
     }
 
     public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
+        this.DepartmentName = departmentName;
     }
 
    public int getDepartmentId(){
-   
-       return scopeIdentity;
-   
+       return DepartmentId;
    }
-     public void Insert(){
-    ///
-        String SQL;
-        SQL = "INSERT INTO dbo.Department (DepartmentName) VALUES("+ getDepartmentName() + ")";
+   
+    public void Insert() throws ApplicationException{
+        if (DepartmentName == "") {
+            throw new ApplicationException("Department Name was Not Specified");
+        }
+       String SQL = "INSERT INTO dbo.Department (DepartmentName) VALUES("+ DatabaseHelper.Quote(getDepartmentName()) + ")";
+       Database DB = new Database();
+       try {
+          DepartmentId = DB.InsertSQL(SQL);//scope identity
+       }//end try
+       catch (SQLException ex) {
+             Logger.ErrorLog.LogError(ex);
+       }//end first catch
+       catch (ApplicationException ex) {
+           Logger.ErrorLog.LogError(ex);
+       }//end second catch
+   }//end public void Insert
+    
+    public void LoadById(int dId) {
+        String SQL = "SELECT * FROM Department WHERE DepartmentId = " + dId;
         Database DB = new Database();
         try {
-           scopeIdentity = DB.InsertSQL(SQL);//scope identity
-        }//end try
-        catch (SQLException ex) {
-              ////      
-           
-        }//end first catch
-        catch (ApplicationException ex) {
-            ////
-            
-        }//end second catch
-
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DepartmentId = rs.getInt(1);
+                DepartmentName = rs.getString(2);
+            } else {
+                DepartmentId = 0;
+                DepartmentName = null;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
     
-    }//end public void Insert
-    
-    
-    
-    
+    public void LoadByDepartmentName(String dName) {
+        String SQL = "SELECT * FROM Department WHERE DepartmentName = " + DatabaseHelper.Quote(dName);
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DepartmentId = rs.getInt(1);
+                DepartmentName = rs.getString(2);
+            } else {
+                DepartmentId = 0;
+                DepartmentName = null;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
 }//end class

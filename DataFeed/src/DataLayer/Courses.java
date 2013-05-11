@@ -5,7 +5,9 @@
 package DataLayer;
 
 import DataAccess.Database;
+import DataAccess.DatabaseHelper;
 import Exceptions.ApplicationException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -14,18 +16,21 @@ import java.sql.SQLException;
  * The objects pertaining to this class will be constructed with the input from the enroll.txt file
  */
 public class Courses {
-private String CourseNumber;
-private String Department;
-private int NumberEnrolled;
+    private int PreviousEnrollmentId;
+    private String CourseNumber;
+    private int DepartmentId;
+    private int NumberEnrolled;
 
-public Courses (String courseNum, String depart, int numEnro){
-
-    CourseNumber=courseNum;
-    Department=depart;
-    NumberEnrolled=numEnro;
+    public Courses (){
+        PreviousEnrollmentId = 0;
+        CourseNumber = "";
+        DepartmentId = 0;
+        NumberEnrolled = 0;
+    }
     
-    
-}
+    public int getPreviousEnrollmentId() {
+        return PreviousEnrollmentId;
+    }
 
     public String getCourseNumber() {
         return CourseNumber;
@@ -35,12 +40,12 @@ public Courses (String courseNum, String depart, int numEnro){
         this.CourseNumber = CourseNumber;
     }
 
-    public String getDepartment() {
-        return Department;
+    public int getDepartment() {
+        return DepartmentId;
     }
 
-    public void setDepartment(String Department) {
-        this.Department = Department;
+    public void setDepartment(int Department) {
+        this.DepartmentId = Department;
     }
 
     public int getNumberEnrolled() {
@@ -51,41 +56,84 @@ public Courses (String courseNum, String depart, int numEnro){
         this.NumberEnrolled = NumberEnrolled;
     }
     
-    public void Insert(){
-    
+    public void Insert() throws ApplicationException{
+        if (CourseNumber == "") {
+            throw new ApplicationException ("No Course Number Specified for Previous Enrollment");
+        }
+        if (DepartmentId == 0) {
+            throw new ApplicationException ("No Department Specified for Previous Enrollment");
+        }
         String SQL;
-<<<<<<< HEAD
-        SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+ "," + getDepartment()+ getNumberEnrolled() + ")";
-=======
-        SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+","+getDepartment()+","+ getNumberEnrolled() + ")";
->>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
+        SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" + DatabaseHelper.Quote(getCourseNumber()) + "," + getDepartment()+ "," + getNumberEnrolled() + ")";
+        //SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+","+getDepartment()+","+ getNumberEnrolled() + ")";
         Database DB = new Database();
         try {
-            DB.InsertSQL(SQL);
-        }//end try
+            PreviousEnrollmentId = DB.InsertSQL(SQL);
+        }
         catch (SQLException ex) {
             Logger.ErrorLog.LogError(ex);
-        }//end first catch
+        }
         catch (ApplicationException ex) {
-
-        }//end second catch
-
-    
-    }//end public void Insert 
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
     
     
     @Override 
     public String toString(){
-    
         StringBuilder i = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
         i.append("Course number:   " + getCourseNumber() + NEW_LINE);
         i.append("Department:      " + getDepartment() + NEW_LINE);
         i.append("Number enrolled: " + getNumberEnrolled() + NEW_LINE);
-       
-        
         return i.toString();
+    }
     
-    }//end toString
+    public void LoadById(int peId) {
+        String SQL = "SELECT * FROM PreviousEnrollment WHERE PreviousEnrollmentId = " + peId;
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                PreviousEnrollmentId = rs.getInt(1);
+                CourseNumber = rs.getString(2);
+                DepartmentId = rs.getInt(3);
+                NumberEnrolled = rs.getInt(4);
+            } else {
+                PreviousEnrollmentId = 0;
+                CourseNumber = "";
+                DepartmentId = 0;
+                NumberEnrolled = 0;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
     
+    public void LoadByDepartmentAndCourseNumber(int dId, String cNumber) {
+        String SQL = "SELECT * FROM PreviousEnrollment WHERE DepartmentId = " + dId + " AND CourseNumber = " + DatabaseHelper.Quote(cNumber);
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                PreviousEnrollmentId = rs.getInt(1);
+                CourseNumber = rs.getString(2);
+                DepartmentId = rs.getInt(3);
+                NumberEnrolled = rs.getInt(4);
+            } else {
+                PreviousEnrollmentId = 0;
+                CourseNumber = "";
+                DepartmentId = 0;
+                NumberEnrolled = 0;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
 }

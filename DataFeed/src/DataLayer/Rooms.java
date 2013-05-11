@@ -5,8 +5,10 @@
 package DataLayer;
 
 import DataAccess.Database;
+import DataAccess.DatabaseHelper;
 import java.sql.SQLException;
 import Exceptions.ApplicationException;
+import java.sql.ResultSet;
 
 /**
  *
@@ -19,24 +21,17 @@ import Exceptions.ApplicationException;
 public class Rooms {
     ///ADD ROOM ID
     private int RoomId;
+    private int BuildingId;
     private int RoomNumber;//room number
-    //private String building;//building where the room is located at
-    
-    private int buildingId;
     private int Capacity;//room capacity 
-    private String Campus; //campus is either north south east or west (maybe we call them 1/2/3/4)
-    private boolean Media; //media room or not, 1 = yes, 0 = no 
-   // private int scopeIdentity;
+    private boolean MediaAvailable; //media room or not, 1 = yes, 0 = no 
     
-    
-  public Rooms (int RooId, int rNum, int buildId, int cap, String camp, boolean med){
-  RoomId=RooId;
-  RoomNumber= rNum;
-  buildingId= buildId;
-  Capacity= cap;
-  Campus = camp;
-  Media= med;
-      
+  public Rooms (){
+    RoomId = 0;
+    RoomNumber = 0;
+    BuildingId = 0;
+    Capacity = 0;
+    MediaAvailable = false;
   }
 
     public int getRoomId() {
@@ -46,17 +41,6 @@ public class Rooms {
     public void setRoomId(int RoomId) {
         this.RoomId = RoomId;
     }
-
-//    public int getScopeIdentity() {
-//        return scopeIdentity;
-//    }
-//
-//    public void setScopeIdentity(int scopeIdentity) {
-//        this.scopeIdentity = scopeIdentity;
-//    }
-  
-  
-  
 
     public int getRoomNumber() {
         return RoomNumber;
@@ -74,54 +58,45 @@ public class Rooms {
         this.Capacity = Capacity;
     }
 
-    public String getCampus() {
-        return Campus;
-    }
-
-    public void setCampus(String Campus) {
-        this.Campus = Campus;
-    }
-
     public int getBuildingId() {
-        return buildingId;
+        return BuildingId;
     }
 
     public void setBuildingId(int buildingId) {
-        this.buildingId = buildingId;
+        this.BuildingId = buildingId;
     }
 
    public boolean getMedia() {
-        return Media;
+        return MediaAvailable;
     }
    
    private int getMediaDB() {
-       return Media ? 1 : 0;
+       return MediaAvailable ? 1 : 0;
    }
 
     public void setMedia(boolean Media) {
-        this.Media = Media;
+        this.MediaAvailable = Media;
     }
   
-    public void Insert(){
-    ///i added th throws statements...????
-        String SQL;
-<<<<<<< HEAD
-        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId() + "," + getRoomNumber() + "," +  getCapacity() + "," + getMediaDB() + ")";
-=======
-        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) "
-                + "VALUES("+ getBuildingId()+","+ getRoomNumber() + ","+ getCapacity() +","+ getMedia() + ")";
->>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
+    public void Insert() throws ApplicationException{
+        if (BuildingId == 0) {
+            throw new ApplicationException("No Building Assigned To The Room!");
+        }
+        if (RoomNumber == 0) {
+            throw new ApplicationException("No Room Number Specified!");
+        }
+        if (Capacity == 0) {
+            throw new ApplicationException("No Capacity Sepcified!");
+        }
+        String SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId() + "," + getRoomNumber() + "," +  getCapacity() + "," + getMediaDB() + ")";
         Database DB = new Database();
         try {
            RoomId = DB.InsertSQL(SQL);//scope identity  
         }//end try
         catch (SQLException ex) {
-              ////
-           ///ERROR HANDLING FUNCTION
             Logger.ErrorLog.LogError(ex);
         }//end first catch
         catch (ApplicationException ex) {
-            ////
             Logger.ErrorLog.LogError(ex);
         }//end second catch
 
@@ -129,17 +104,64 @@ public class Rooms {
     }//end public void Insert
     @Override 
     public String toString(){
-    
         StringBuilder i = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
         i.append("Room number: " + getRoomNumber() + NEW_LINE);
         i.append("Building ID:    " + getBuildingId() + NEW_LINE);
         i.append("Capacity:    " + getCapacity() + NEW_LINE);
-        i.append("Campus:      " + getCampus() + NEW_LINE);
         i.append("Media:       " + getMedia() + NEW_LINE);
-        
         return i.toString();
-    
     }//end toString
   
+    public void LoadById(int rId) {
+       String SQL = "SELECT * FROM BuildingRoom WHERE RoomId = " + rId;
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                RoomId = rs.getInt(1);
+                BuildingId = rs.getInt(2);
+                RoomNumber = rs.getInt(3);
+                Capacity = rs.getInt(4);
+                MediaAvailable = rs.getBoolean(5);
+            } else {
+                RoomId = 0;
+                BuildingId = 0;
+                RoomNumber = 0;
+                Capacity = 0;
+                MediaAvailable = false;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+   }
+   
+   public void LoadByBuildingAndName(int bId, int rNumber) {
+       String SQL = "SELECT * FROM BuildingRoom WHERE BuildingId = " + bId + " AND RoomNumber = " + getRoomNumber();
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                RoomId = rs.getInt(1);
+                BuildingId = rs.getInt(2);
+                RoomNumber = rs.getInt(3);
+                Capacity = rs.getInt(4);
+                MediaAvailable = rs.getBoolean(5);
+            } else {
+                RoomId = 0;
+                BuildingId = 0;
+                RoomNumber = 0;
+                Capacity = 0;
+                MediaAvailable = false;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+   }
 }

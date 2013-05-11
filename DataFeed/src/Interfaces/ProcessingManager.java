@@ -1,6 +1,7 @@
 package Interfaces;
 
 import Exceptions.ApplicationException;
+import javax.swing.JTextArea;
 
 /**
  *

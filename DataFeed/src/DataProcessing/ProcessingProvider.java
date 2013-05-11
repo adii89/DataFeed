@@ -9,6 +9,7 @@ import DataProcessing.ProcessLibrary.Preferences;
 import Exceptions.ApplicationException;
 import Interfaces.ProcessingManager;
 import java.io.File;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -34,7 +35,6 @@ public class ProcessingProvider implements ProcessingManager {
                 case "preferences.txt":
                     Preferences processPreferences = new Preferences(_file);
                     processPreferences.Process();
-                case "rooms.txt":
                     Rooms processRooms = new Rooms(_file);
                     processRooms.Process();
                 case "sections.txt":

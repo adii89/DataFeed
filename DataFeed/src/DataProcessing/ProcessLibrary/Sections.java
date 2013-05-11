@@ -4,8 +4,7 @@
  */
 package DataProcessing.ProcessLibrary;
 
-import DataAccess.Database;
-import DataAccess.DatabaseHelper;
+import DataLayer.Department;
 import Exceptions.ApplicationException;
 import Interfaces.ProcessingManager;
 import java.io.BufferedReader;
@@ -13,8 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -31,48 +29,68 @@ public class Sections implements ProcessingManager{
     public void Process() throws ApplicationException {
         //"sections.txt"
         try {
-            BufferedReader br= new BufferedReader(new FileReader(_file.getPath()));
+            BufferedReader br = new BufferedReader(new FileReader(_file.getPath()));
+            //Get Count of lines
+            double LineCount = 0;
+            double ProcessedCount = 0;
+            double Percent = 0.0;
+            while(br.readLine() != null) LineCount++;
+            LineCount -= 1;
+            
+            br = new BufferedReader(new FileReader(_file.getPath()));
             String line= br.readLine(); //reads column names
             String columns[] = line.split("\\|");//gets the name of the columns, this will be used when reading preferences.txt
+            
+            
+            
             line= br.readLine(); //reads first line of records
-            String delims = " "; //for parsing the Instructor's name
+            
+            
 
-            String roomBuild; 
-            String previousBuilding= "";
-            String previousDepartment ="";
-            int roomBuildingID=0;
-            int departmentID= 0; 
+            while (line != null) {
+                String[] section = line.split("\\|");
+                String courseN= section[0].trim();
+                String department = section[1].trim();
+                int callNumber = Integer.parseInt(section[2].trim());
+                String days= section[3];
+                String time = section[4];
+                boolean media = section[5].equalsIgnoreCase("no");
 
-            String[] section = line.split("\\|");
-            String courseN= section[0].trim();
-            String department = section[1].trim();
-            String SQL = "SELECT DepartmentId FROM Department WHERE DepartmentName = " + DatabaseHelper.Quote(department);
-            Database DB = new Database();
-            int DepartmentId;
-            try {
-                ResultSet rs = DB.SelectSQL(SQL);
-                if (rs.next()) {
-                    DepartmentId = rs.getInt(1);
-                    String cNumber =section[2].trim();
-                    int CallNumber = Integer.parseInt(cNumber);
-                    String days= section[3];
-                    String time = section[4];
-                    boolean media = true;
-                    if(section[5].trim().equalsIgnoreCase("NO")){
-                        media = false;
+                Department Dept = new Department();
+                Dept.LoadByDepartmentName(department);
+
+                if (Dept.getDepartmentId() == 0){
+                    Dept.setDepartmentName(department);
+                    try {
+                        Dept.Insert();
+                    } catch (ApplicationException ex) {
+                        Logger.ErrorLog.LogError(ex);
+                        continue;
                     }
-
-                    DataLayer.Sections s= new DataLayer.Sections(courseN, DepartmentId, CallNumber,days, time, media);
-                    s.Insert();
-                    System.out.println(s.toString());
-                } else {
-                    System.out.println("The Department For This Section Was not Found!!!");
-                    System.out.println("Please Upload Instructors File");
                 }
-            } catch (SQLException ex) {
-                Logger.ErrorLog.LogError(ex);
-            } catch (ApplicationException ex) {
-                Logger.ErrorLog.LogError(ex);
+                
+                DataLayer.Sections Sec = new DataLayer.Sections();
+                Sec.LoadByCallNumber(callNumber);
+                
+                if (Sec.getSectionId() == 0) {
+                    Sec.setDept(Dept.getDepartmentId());
+                    Sec.setCourseNumber(courseN);
+                    Sec.setCallNumber(callNumber);
+                    Sec.setDays(days);
+                    Sec.setTime(time);
+                    Sec.setMedia(media);
+                    try {
+                        Sec.Insert();
+                    } catch (ApplicationException ex){
+                        Logger.ErrorLog.LogError(ex);
+                        continue;
+                    }
+                }
+                ProcessedCount++;
+                Percent = ProcessedCount / LineCount;
+                System.out.println(Sec.toString() + "\n\n" + "Processed " + ProcessedCount + " Out Of " + LineCount);
+                System.out.println(Percent * 100 + " % Completed");
+                line= br.readLine();
             }
         } catch (FileNotFoundException ex){
             Logger.ErrorLog.LogError(ex);

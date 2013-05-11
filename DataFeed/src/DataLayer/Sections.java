@@ -7,6 +7,7 @@ package DataLayer;
 import DataAccess.Database;
 import DataAccess.DatabaseHelper;
 import Exceptions.ApplicationException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -18,22 +19,24 @@ public class Sections{
     
     private int SectionId;
     private String CourseNumber;
-   
     private int DepartmentId;
     private int CallNumber; 
-    
     private String Days; 
     private String Time; //
     private boolean Media; //  
     
-    public Sections (String courseNum, int departm, int callNum, String days, String time, boolean media){
-    CourseNumber = courseNum;
-    DepartmentId= departm;
-    CallNumber= callNum;
-    Days=days;
-    Time=time;
-    Media=media;
+    public Sections (){
+        SectionId = 0;
+        CourseNumber = "";
+        DepartmentId = 0;
+        CallNumber = 0;
+        Days = "";
+        Time = "";
+        Media = false;
+    }
     
+    public int getSectionId() {
+        return SectionId;
     }
 
     public String getCourseNumber() {
@@ -72,8 +75,11 @@ public class Sections{
         return Time;
     }
 
-    public void setTime(String Time) {
-        this.Time = Time;
+    public void setTime(String t) {
+        if (t.length() == 7) {
+            t = "0" + t;
+        }
+        Time = t;
     }
 
     public boolean getMedia() {
@@ -88,40 +94,34 @@ public class Sections{
         this.Media = Media;
     }
     
-//    public int setMediaYesNo(){
-//    
-//        int mediaYN;
-//        
-//        
-//        
-//        return mediaYN;
-//        
-//        
-//    }
-    
-     public void Insert(){
-    
-        String SQL;
-<<<<<<< HEAD
-        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+ "," + getCallNumber() + "," + DatabaseHelper.Quote(getDays()) + "," + DatabaseHelper.Quote(getTime()) + "," + getMediaDB() + ")";
-=======
-        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+","+getCallNumber()+ ","+getDays()  + ","+ getTime()  + ","+getMedia() + ")";
->>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
+     public void Insert() throws ApplicationException{
+         if (DepartmentId == 0) {
+             throw new ApplicationException("Department Was Not Specified!");
+         }
+         if (CourseNumber == "") {
+             throw new ApplicationException("Course Number Was Not Specified!");
+         }
+         if (CallNumber == 0) {
+             throw new ApplicationException("Call Number Was Not Specified!");
+         }
+         if (Days == "") {
+             throw new ApplicationException("Meeting Days Were Not Specified!");
+         }
+         if (Time == "") {
+             throw new ApplicationException("Meeting Times Were Not Specified!");
+         }
+        String SQL = "INSERT INTO dbo.Section (DepartmentId, CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" + getDept() + "," + DatabaseHelper.Quote(getCourseNumber()) + "," + getCallNumber() + "," + DatabaseHelper.Quote(getDays()) + "," + DatabaseHelper.Quote(getTime()) + "," + getMediaDB() + ")";
         Database DB = new Database();
         try {
             SectionId = DB.InsertSQL(SQL);
-        }//end try
+        }
         catch (SQLException ex) {
-
-        }//end first catch
+            Logger.ErrorLog.LogError(ex);
+        }
         catch (ApplicationException ex) {
-
-            
-            
-        }//end second catch
-
-    
-    }//end public void Insert 
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
     
     
     @Override 
@@ -139,4 +139,63 @@ public class Sections{
         return i.toString();
     }
     
+    public void LoadById(int sId) {
+        String SQL = "SELECT * FROM Section WHERE SectionId = " + sId;
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                SectionId = rs.getInt(1);
+                DepartmentId = rs.getInt(2);
+                CourseNumber = rs.getString(3);
+                CallNumber = rs.getInt(4);
+                Days = rs.getString(5);
+                Time = rs.getString(6);
+                Media = rs.getBoolean(7);
+            } else {
+                SectionId = 0;
+                DepartmentId = 0;
+                CourseNumber = "";
+                CallNumber = 0;
+                Days = "";
+                Time = "";
+                Media = false;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
+    
+    public void LoadByCallNumber(int cNumber) {
+        String SQL = "SELECT * FROM Section WHERE CallNumber = " + cNumber;
+        Database DB = new Database();
+        try {
+            ResultSet rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                SectionId = rs.getInt(1);
+                DepartmentId = rs.getInt(2);
+                CourseNumber = rs.getString(3);
+                CallNumber = rs.getInt(4);
+                Days = rs.getString(5);
+                Time = rs.getString(6);
+                Media = rs.getBoolean(7);
+            } else {
+                SectionId = 0;
+                DepartmentId = 0;
+                CourseNumber = "";
+                CallNumber = 0;
+                Days = "";
+                Time = "";
+                Media = false;
+            }
+            if (!rs.isClosed()) { rs.close();}
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+        }
+    }
 }

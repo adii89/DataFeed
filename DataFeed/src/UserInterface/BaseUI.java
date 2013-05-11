@@ -23,14 +23,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import Config.Constants;
+import DataAccess.Database;
 import DataProcessing.ProcessingProvider;
+import DataProcessing.Scheduler;
+import Exceptions.ApplicationException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
-import javax.swing.JScrollPane;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 /**
@@ -97,74 +99,12 @@ public class BaseUI extends JFrame implements Runnable {
     }
     
     public class ProcessFile extends JDialog implements ActionListener {
-        public ProcessFile(JFrame parentFrame) {
-            super(parentFrame, "Process File", true);
-            this.setLocationRelativeTo(parentFrame);
-            JLabel lblSuccess = new JLabel("Success");
-            JTextArea txtSuccess = new JTextArea();
-            txtSuccess.setEditable(false);
-            txtSuccess.setPreferredSize(new Dimension(225, 200));
-            txtSuccess.setLineWrap(true);
-            txtSuccess.setWrapStyleWord(true);
-            JScrollPane successScroll = new JScrollPane(txtSuccess);
-            successScroll.setPreferredSize(new Dimension(225, 200));
-            successScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            JLabel lblFail = new JLabel("Failure");
-            JTextArea txtFail = new JTextArea();
-            txtFail.setPreferredSize(new Dimension(225, 200));
-            txtFail.setLineWrap(true);
-            txtFail.setWrapStyleWord(true);
-            JScrollPane failScroll = new JScrollPane(txtFail);
-            failScroll.setPreferredSize(new Dimension(225, 200));
-            failScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            //JLabel lblText = new JLabel("<html><h1><i>PFU Enrollment Application<br>Capstone Project<br>Northwestern</i></h1><hr>Adrian Krzeszkiewicz<br>Valerie Torres<br> Mina Aitelhadj<br> Erik Miller<br> Horace Flournoy</html>");
-            JButton btnFinish = new JButton("Finish");
-            btnFinish.setPreferredSize(new Dimension(475, 35));
-            btnFinish.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e){
-                    setVisible(false);
-                }
-            });
-            JPanel leftPanel = new JPanel();
-            leftPanel.setPreferredSize(new Dimension(225, 225));
-            leftPanel.add(lblSuccess);
-            leftPanel.add(successScroll);
-            JPanel rightPanel = new JPanel();
-            rightPanel.setPreferredSize(new Dimension(225, 225));
-            rightPanel.add(lblFail);
-            rightPanel.add(failScroll);
-            JPanel p = new JPanel();
-            p.add(leftPanel);
-            p.add(rightPanel);
-            p.add(btnFinish);
-            add(p);
-            this.setResizable(false);
-            setSize(500, 300);
-        }
+        JTextArea txtSuccess;
         @Override
         public void actionPerformed(ActionEvent e) {
             if (SelectedFile != null) {
-                setVisible(true);
                 ProcessingProvider provider = new ProcessingProvider(SelectedFile);
                 provider.Process();
-            }
-        }
-    }
-    
-    private void SetLookAndFeel(){
-        try {
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (Exception ex) {
-                Logger.ErrorLog.LogError(ex);
             }
         }
     }
@@ -184,38 +124,19 @@ public class BaseUI extends JFrame implements Runnable {
        JMenuItem aboutItem = new JMenuItem("About");
        openItem.addActionListener(new OpenFile());
        closeItem.addActionListener(new CloseApplication());
-       aboutItem.addActionListener(new AboutDialog(this));
+       //aboutItem.addActionListener(new AboutDialog(this));
+       aboutItem.addActionListener(new ActionListener(){
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               JOptionPane.showMessageDialog(null, "<html><h1><i>PFU Enrollment Application<br>Capstone Project<br>Northwestern</i></h1><hr>Adrian Krzeszkiewicz<br>Valerie Torres<br> Mina Aitelhadj<br> Erik Miller<br> Horace Flournoy</html>");
+           }
+       });
        fMenu.add(openItem);
        fMenu.add(closeItem);
        aMenu.add(aboutItem);
        mBar.add(fMenu);
        mBar.add(aMenu);
        return mBar;
-    }
-    
-    private class AboutDialog extends JDialog implements ActionListener {
-        public AboutDialog(JFrame parentFrame) {
-            super(parentFrame, "About", true);
-            this.setLocationRelativeTo(parentFrame);
-            JLabel lblText = new JLabel("<html><h1><i>PFU Enrollment Application<br>Capstone Project<br>Northwestern</i></h1><hr>Adrian Krzeszkiewicz<br>Valerie Torres<br> Mina Aitelhadj<br> Erik Miller<br> Horace Flournoy</html>");
-            JButton OK = new JButton("OK");
-            OK.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e){
-                    setVisible(false);
-                }
-            });
-            JPanel p = new JPanel();
-            p.add(lblText);
-            p.add(OK);
-            add(p);
-            this.setResizable(false);
-            setSize(350, 300);
-        }
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            setVisible(true);
-        }
     }
     
     private JPanel GetCenterPanel(){
@@ -256,7 +177,7 @@ public class BaseUI extends JFrame implements Runnable {
         processFilePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         btnProcessFile.setEnabled(false);
         btnProcessFile.setPreferredSize(new Dimension(500, 75));
-        btnProcessFile.addActionListener(new ProcessFile(this));
+        btnProcessFile.addActionListener(new ProcessFile());
         processFilePanel.add(btnProcessFile);
         return processFilePanel;
     }
@@ -267,8 +188,137 @@ public class BaseUI extends JFrame implements Runnable {
         processSchedulePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         JButton btnProcessSchedule = new JButton("Process Scheduling");
         btnProcessSchedule.setPreferredSize(new Dimension(500, 75));
+        btnProcessSchedule.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (ValidateData()) {
+                    try {
+                        Scheduler.Start();
+                    } catch (Exception ex) {
+                        Logger.ErrorLog.LogError(ex);
+                        JOptionPane.showMessageDialog(null, "Oooooops .... Something Went Wrong ... \n No Worries, though, Our Guys Were Notified.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Some Pieces Of Data Are Missing \n Did You Forget To Upload a File?");
+                }
+            }
+        });
         processSchedulePanel.add(btnProcessSchedule);
         return processSchedulePanel;
+    }
+    
+    private boolean ValidateData(){
+        boolean bError = false;
+        String SQL = "";
+        Database DB = new Database();
+        ResultSet rs;
+        int DataCount = 0;
+        try {
+            //Check CampusBuilding
+            SQL = "SELECT COUNT(BuildingId) FROM CampusBuilding";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check BuildingRoom
+            SQL = "SELECT COUNT(RoomId) FROM BuildingRoom";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check Department
+            SQL = "SELECT COUNT(DepartmentId) FROM Department";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check PfuUser
+            SQL = "SELECT COUNT(UserId) FROM PfuUser";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check PfuUserPreference
+            SQL = "SELECT COUNT(PreferenceId) FROM PfuUserPreference";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check PfuUserCampusPreference
+            SQL = "SELECT COUNT(CampusId) FROM PfuUserCampusPreference";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check PreviousEnrollment
+            SQL = "SELECT COUNT(*) FROM PreviousEnrollment";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+            //Check Section
+            SQL = "SELECT COUNT(SectionId) FROM Section";
+            rs = DB.SelectSQL(SQL);
+            if (rs.next()) {
+                DataCount = rs.getInt(1);
+                if (DataCount == 0)
+                    //No Data
+                    bError = true;
+            } else {
+                //No Data
+                bError = true;
+            }
+        } catch (ApplicationException ex) {
+            Logger.ErrorLog.LogError(ex);
+            bError = true;
+        } catch (SQLException ex) {
+            Logger.ErrorLog.LogError(ex);
+            bError = true;
+        }
+        
+        return !bError;
     }
 }
 
