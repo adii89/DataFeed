@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package DataLayer;
+
 import java.io.*;
 import java.util.*;
 import DataAccess.Database;
@@ -69,7 +70,6 @@ public static void main(String[] args)throws IOException{
                             case 0:
                                 //reads "C:\\rooms.txt"
                                 String[] room = line.split("\\|");
-                                   
                                 int roomN =  Integer.parseInt(room[0].trim());
                                 roomBuild= room[1].trim();
                                 
@@ -98,7 +98,11 @@ public static void main(String[] args)throws IOException{
                                 }//end switch 
                                 
                                 boolean media = true;
+<<<<<<< HEAD
                                 if(room[4].trim().equalsIgnoreCase("NO")){
+=======
+                                if(room[4].trim().equalsIgnoreCase("no")){
+>>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
                                 media = false;
                                 }//end if
                                  //Building b = new Building(campusId); 
@@ -169,6 +173,19 @@ public static void main(String[] args)throws IOException{
                                             //end if
                                     int insID=0;
                                     InstructorGeneralPreferences instruct= new InstructorGeneralPreferences(insID, departmentID, lName, fName, mInitial, numSecToTeach, weekend, p);
+                                    instruct.InsertIntoPfuUser();
+                                    instruct.InsertIntoPfuPreference();
+                                    
+                                 String insertSections;
+                                 
+                                 for (int x=0; x<=p.size(); x++){
+                                 instruct.InsertIntoPfuUserCampusPreference(p.get(x));
+                                   
+                                 
+                                 }
+                                 
+                                 
+                                    
                                     System.out.println(instruct.toString());
                                     instructorsGeneralP.add(instruct);
 
@@ -195,6 +212,7 @@ public static void main(String[] args)throws IOException{
                                                 media = false;
                                             }
 
+<<<<<<< HEAD
                                             Sections s= new Sections(courseN, DepartmentId, CallNumber,days, time, media);
                                             s.Insert();
                                             System.out.println(s.toString());
@@ -207,6 +225,24 @@ public static void main(String[] args)throws IOException{
                                     } catch (ApplicationException ex) {
                                         Logger.ErrorLog.LogError(ex);
                                     }
+=======
+                                    String callNumber =section[2].trim();
+                                    String days= section[3];
+                                    String time = section[4];
+                                    media = true;
+                                     if(section[5].equalsIgnoreCase("no")){
+                                        media = false;
+                                           }//end if
+
+                                    /////IMPORTANT HOW TO LOAD THE DEPARTMENT ID***ADRIAN
+                                     
+                                     Sections s= new Sections(courseN, department, callNumber,days, time, media);
+                                    System.out.println(s.toString());
+                                    sections.add(s);
+
+                                    
+
+>>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
                                     break;
                                case 3:
                                      

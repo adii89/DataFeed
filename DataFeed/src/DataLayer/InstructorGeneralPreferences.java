@@ -118,12 +118,12 @@ public InstructorGeneralPreferences(int instructorId, int dept, String fName, St
     }
     
      public void InsertIntoPfuUser(){
-    ///i added th throws statements...????
+    
         String SQL;
         SQL = "INSERT INTO dbo.PfuUser (UserTypeId, DepartmentId, UserFirstName, "
-                + "UserLastName, UserMiddleInit, Username, Password, CreateDate, ModifyDate) " 
-                    + " VALUES("+ 2 + getDepartment() +  getInstructorFirstName() + getInstructorLastName() 
-                        + getInstructorMiddleInt() + getUsername() + "pass123" +")";
+                + "UserLastName, UserMiddleInit, Username, Password) " 
+                    + " VALUES("+ 2 +","+ getDepartment() + ","+ getInstructorFirstName() +","+ getInstructorLastName() 
+                        +","+ getInstructorMiddleInt() +","+ getUsername() +","+ "pass123" +")";
         Database DB = new Database();
         try {
            InstructorId = DB.InsertSQL(SQL);//scope identity  
@@ -137,8 +137,73 @@ public InstructorGeneralPreferences(int instructorId, int dept, String fName, St
             ////
             Logger.ErrorLog.LogError(ex);
         }//end second catch
+<<<<<<< HEAD
      }
+=======
+
+     }//end InsertIntoPfuUser
+     
+     
+     public void InsertIntoPfuPreference(){
+>>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
     
+        String SQL;
+        SQL = "INSERT INTO dbo.PfuUserPreference (UserId, NumberOfSections, WeekendAvailability) " 
+                    + " VALUES("+ 2 +","+ getNumberOfSectionsToTeach()+"," + getWeekend() +")";
+        Database DB = new Database();
+        try {
+           DB.InsertSQL(SQL);//scope identity  
+        }//end try
+        catch (SQLException ex) {
+              ////
+           ///ERROR HANDLING FUNCTION
+            Logger.ErrorLog.LogError(ex);
+        }//end first catch
+        catch (ApplicationException ex) {
+            ////
+            Logger.ErrorLog.LogError(ex);
+        }//end second catch
+
+     }//end InsertIntoPfuPreference
+     
+     
+     public void InsertIntoPfuUserCampusPreference(String campusPref){
+         
+       String SQL;
+       int campus=0;
+       switch(campusPref){
+           case "NORTH":
+               campus=1;
+               break;
+           case "SOUTH":
+               campus=2;
+               break;
+            case "EAST":
+               campus=3;
+               break; 
+                case "WEST":
+               campus=4;
+               break;
+       }
+        SQL = "INSERT INTO dbo.PfuUserCampusPreference (UserId, CampusId) " 
+                    + " VALUES("+ getInstructorId()+ "," +campus+ ")";
+        Database DB = new Database();
+        try {
+           DB.InsertSQL(SQL);//scope identity  
+        }//end try
+        catch (SQLException ex) {
+              ////
+           ///ERROR HANDLING FUNCTION
+            Logger.ErrorLog.LogError(ex);
+        }//end first catch
+        catch (ApplicationException ex) {
+            ////
+            Logger.ErrorLog.LogError(ex);
+        }//end second catch
+         
+         
+     }//end InsertIntoPfuUserpreference
+     
 
     @Override 
     public String toString(){

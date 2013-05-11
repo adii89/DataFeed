@@ -54,7 +54,11 @@ public Courses (String courseNum, String depart, int numEnro){
     public void Insert(){
     
         String SQL;
+<<<<<<< HEAD
         SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+ "," + getDepartment()+ getNumberEnrolled() + ")";
+=======
+        SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+","+getDepartment()+","+ getNumberEnrolled() + ")";
+>>>>>>> 07c633ec574952c90ae098cee8c7ff835a84ff32
         Database DB = new Database();
         try {
             DB.InsertSQL(SQL);
