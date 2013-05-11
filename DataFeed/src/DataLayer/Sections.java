@@ -82,10 +82,21 @@ public class Sections{
         this.Media = Media;
     }
     
+//    public int setMediaYesNo(){
+//    
+//        int mediaYN;
+//        
+//        
+//        
+//        return mediaYN;
+//        
+//        
+//    }
+    
      public void Insert(){
     
         String SQL;
-        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+getCallNumber()+ getDays()  +  getTime()  + getMedia() + ")";
+        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+","+getCallNumber()+ ","+getDays()  + ","+ getTime()  + ","+getMedia() + ")";
         Database DB = new Database();
         try {
             DB.InsertSQL(SQL);

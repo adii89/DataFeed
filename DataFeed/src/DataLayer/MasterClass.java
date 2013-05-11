@@ -166,6 +166,19 @@ public static void main(String[] args)throws IOException{
                                             //end if
                                     int insID=0;
                                     InstructorGeneralPreferences instruct= new InstructorGeneralPreferences(insID, departmentID, lName, fName, mInitial, numSecToTeach, weekend, p);
+                                    instruct.InsertIntoPfuUser();
+                                    instruct.InsertIntoPfuPreference();
+                                    
+                                 String insertSections;
+                                 
+                                 for (int x=0; x<=p.size(); x++){
+                                 instruct.InsertIntoPfuUserCampusPreference(p.get(x));
+                                   
+                                 
+                                 }
+                                 
+                                 
+                                    
                                     System.out.println(instruct.toString());
                                     instructorsGeneralP.add(instruct);
 
@@ -185,12 +198,13 @@ public static void main(String[] args)throws IOException{
                                         media = false;
                                            }//end if
 
-                                    Sections s= new Sections(courseN, department, callNumber,days, time, media);
+                                    /////IMPORTANT HOW TO LOAD THE DEPARTMENT ID***ADRIAN
+                                     
+                                     Sections s= new Sections(courseN, department, callNumber,days, time, media);
                                     System.out.println(s.toString());
                                     sections.add(s);
 
-                                    String insertSections;
-                                    insertSections="INSERT INTO ";
+                                    
 
                                     break;
                                case 3:

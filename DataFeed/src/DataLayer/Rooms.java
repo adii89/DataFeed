@@ -101,7 +101,8 @@ public class Rooms {
     public void Insert(){
     ///i added th throws statements...????
         String SQL;
-        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId()+ getRoomNumber() +  getCapacity() + getMedia() + ")";
+        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) "
+                + "VALUES("+ getBuildingId()+","+ getRoomNumber() + ","+ getCapacity() +","+ getMedia() + ")";
         Database DB = new Database();
         try {
            RoomId = DB.InsertSQL(SQL);//scope identity  
