@@ -1,10 +1,9 @@
 package Test;
 
-import java.sql.*;
-import Config.ConfigManager;
+import DataAccess.Database;
+import Exceptions.ApplicationException;
 import Security.Cryptography;
-import java.security.MessageDigest;
-import java.util.Arrays;
+import java.sql.*;
 /**
  *
  * @author Adrian Krzeszkiewicz
@@ -15,32 +14,42 @@ import java.util.Arrays;
 public class TestConnection {
     
     public static void main(String[] args) {
-        boolean a = true;
+        boolean a = false;
         if (a) {
             try {
-                String DBUsername = "F8nYTdeuGgD/NQdqm1IhLLUTRVXAvVsFGNH0TtIIe8E=";
-                String encrypted = Cryptography.Decrypt(DBUsername);
-                System.out.println(encrypted);
-            } catch (Exception ex) {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                Database DB = new Database();
+                DB.ConnString = "jdbc:sqlserver://ADI-LAPTOP;database=pfuenrolldb;user=sa;password=Krzekajka1";
+                String SQL = "DELETE FROM Test";
+                DB.SelectSQL(SQL);
                 
+            } catch (ApplicationException ex) {
+                Logger.ErrorLog.LogError(ex);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
             
         } else {
-            String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=pfuenroll_dbuser;password=$aggyBa11$!1&&;";
+            
             //String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=adrian.krzeszkiewicz;password=3l3phant!!;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
             Connection conn = null;
             Statement stmt = null;
             ResultSet rs = null;
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                String connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=pfuenroll_dbuser;password=" + Cryptography.Decrypt(Config.ConfigManager.GetConfgElement("DBPassword")) + ";encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+                //connURL = "jdbc:sqlserver://akg0srei8q.database.windows.net;database=pfuenrolldb;user=adrian.krzeszkiewicz;password=3l3phant!!;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
                 conn = DriverManager.getConnection(connURL);
 
-                String SQL = "SELECT * FROM Test";
+                String SQL = "SELECT * FROM Campus";
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(SQL);
+                if (rs.isClosed())
+                    System.out.println("CLOSED!!!");
                 while (rs.next()) {
-                    System.out.println(rs.getString(1) + " ..... " + rs.getString(3));
+                    System.out.println(rs.getString(1) + " ..... " + rs.getString(2));
                 }
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

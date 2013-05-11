@@ -1,5 +1,6 @@
 package Logger;
 
+import Config.ConfigManager;
 import DataAccess.ConnectionString;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,23 +16,30 @@ import java.sql.SQLException;
 public class ErrorLog {
     
     public static void LogError(Exception e) {
-        Connection Conn = null;
+        
         try {
-            Conn = DriverManager.getConnection(ConnectionString.GetConnString());
+            Connection Conn;
+            String ConnStr;
+            if (ConfigManager.GetConfgElement("TestMode").equalsIgnoreCase("true")) {
+                ConnStr =ConfigManager.GetConfgElement("TestDBServer");
+            } else {
+                ConnStr = ConnectionString.GetConnString();
+            }
+            System.out.println(ConnStr);
+            Conn = DriverManager.getConnection(ConnStr);
             Conn.setAutoCommit(false);
-            PreparedStatement prepStmt = Conn.prepareStatement("INSERT INTO ErrorLog VALUES (\"?, ?, GETDATE())");
-            prepStmt.setString(1, e.getMessage());
-            prepStmt.setString(2, GetStackTrace(e.getStackTrace()));
-            prepStmt.executeUpdate();
+            String SQL = "INSERT INTO ErrorLog VALUES ('" + e.getMessage() + "', '" + GetStackTrace(e.getStackTrace()) + "', GETDATE())";
+            PreparedStatement Stmt = Conn.prepareStatement(SQL);
+            Stmt.setQueryTimeout(Config.Constants.DB_TIMEOUT);
+            Stmt.executeUpdate();
             Conn.commit();
-            prepStmt.close();
+            Conn.close();
             Conn.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
     }
     
     private static String GetStackTrace(StackTraceElement[] stElem) {

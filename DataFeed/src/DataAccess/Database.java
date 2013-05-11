@@ -8,12 +8,13 @@ import java.sql.SQLException;
 import Config.Constants;
 import Exceptions.*;
 import java.sql.PreparedStatement;
+import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 /**
  *
  * @author Adi
  */
 public class Database {
-    private String ConnString;
+    public String ConnString;
     private Connection Conn;
     private Statement Stmt;
     private PreparedStatement prepStmt;
@@ -21,13 +22,14 @@ public class Database {
     //Defalt Constructor
     public Database(){
         try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
              ConnString = ConnectionString.GetConnString();
         } catch (Exception ex){
             ex.printStackTrace();
         }
-    };
+    }
     //OpenConnection
-    private void OpenConnetion(){
+    public void OpenConnection(){
         try {
             Conn = DriverManager.getConnection(ConnString);
             Conn.setAutoCommit(false);
@@ -38,7 +40,7 @@ public class Database {
     }
     
     //TODO: Close
-    private void CloseConnection() throws SQLException{
+    public void CloseConnection() throws SQLException{
         try {
             if (resultSet != null){
                 resultSet.close();
@@ -79,25 +81,7 @@ public class Database {
                 ex.printStackTrace();
             }
         }
-    }
-    
-    //TODO: ExecuteSQL
-    public void ExecuteSQL(String SQL) {
-        if (Conn != null) {
-            try {
-                Stmt = Conn.createStatement();
-                Stmt.setQueryTimeout(Constants.DB_TIMEOUT);
-                
-            } catch (SQLException ex) {
-                
-            }
-            
-            
-        } else {
-            
-        }
-    }
-    
+    } 
     //TODO: SelectSQL
     public ResultSet SelectSQL(String SQL) throws ApplicationException, SQLException{
         if (SQL.toUpperCase().startsWith("SELECT")) {
@@ -107,6 +91,7 @@ public class Database {
                 resultSet = Stmt.executeQuery(SQL);
                 return resultSet;
             } else {
+                CloseConnection();
                 throw new ApplicationException("The Database is not open");
             }
         } else {
@@ -116,6 +101,7 @@ public class Database {
     //InsertSQL
     public int InsertSQL(String SQL) throws ApplicationException, SQLException {
         if (SQL.toUpperCase().startsWith("INSERT")) {
+            OpenConnection();
             if (Conn != null) {
                 prepStmt = Conn.prepareStatement(SQL, PreparedStatement.RETURN_GENERATED_KEYS);
                 prepStmt.setQueryTimeout(Constants.DB_TIMEOUT);
@@ -124,9 +110,12 @@ public class Database {
                      rowsAffected = prepStmt.executeUpdate();
                 } catch(SQLException ex) {
                     RollbackTransaction();
+                    CloseConnection();
                     throw new SQLException(ex);               
                 }           
                 if (rowsAffected == 0) {
+                    RollbackTransaction();
+                    CloseConnection();
                     throw new ApplicationException("INSERT Statement Failed");
                 }
                 int retVal = 0;
@@ -137,28 +126,34 @@ public class Database {
                     throw new ApplicationException("INSERT Statement Failed");
                 }
                 CommitTransaction();
+                CloseConnection();
                 return retVal;
             } else {
+                CloseConnection();
                 throw new ApplicationException("The Database is not open");
             }
         } else {
-            throw new ApplicationException("The statement appears not to be a SELECT statement");
+            throw new ApplicationException("The statement appears not to be a INSERT statement");
         }
     }
     //TODO: DeleteSQL
     public void DeleteSQL (String SQL) throws ApplicationException, SQLException {
         if (SQL.toUpperCase().startsWith("DELETE")) {
+            OpenConnection();
             if (Conn != null) {
                 prepStmt = Conn.prepareStatement(SQL, PreparedStatement.NO_GENERATED_KEYS);
                 prepStmt.setQueryTimeout(Constants.DB_TIMEOUT);
                 try {
                     prepStmt.executeUpdate();
                     CommitTransaction();
+                    CloseConnection();
                 } catch (SQLException ex) {
                     RollbackTransaction();
+                    CloseConnection();
                     throw new SQLException(ex);
                 }
             } else {
+                CloseConnection();
                 throw new ApplicationException("The Database is not open");
             }
         } else {
@@ -169,21 +164,27 @@ public class Database {
     //TODO: UpdateSQL
     public void UpdateSQL (String SQL) throws ApplicationException, SQLException {
         if (SQL.toUpperCase().startsWith("UPDATE")) {
+            OpenConnection();
             if (Conn != null) {
                 prepStmt = Conn.prepareStatement(SQL, PreparedStatement.NO_GENERATED_KEYS);
                 prepStmt.setQueryTimeout(Constants.DB_TIMEOUT);
                 try {
                     prepStmt.executeUpdate();
                     CommitTransaction();
+                    CloseConnection();
                 } catch (SQLException ex) {
                     RollbackTransaction();
+                    CloseConnection();
                     throw new SQLException(ex);
                 }
             } else {
+                CloseConnection();
                 throw new ApplicationException("The Database is not open");
             }
         } else {
             throw new ApplicationException("The statement appears not to be a valid UPDATE statement");
         }
     }
+    
+   
 }
