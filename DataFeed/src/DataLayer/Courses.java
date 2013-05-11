@@ -4,6 +4,10 @@
  */
 package DataLayer;
 
+import DataAccess.Database;
+import Exceptions.ApplicationException;
+import java.sql.SQLException;
+
 /**
  *
  * @author Valerie
@@ -46,5 +50,38 @@ public Courses (String courseNum, String depart, int numEnro){
     public void setNumberEnrolled(int NumberEnrolled) {
         this.NumberEnrolled = NumberEnrolled;
     }
+    
+    public void Insert(){
+    
+        String SQL;
+        SQL = "INSERT INTO dbo.PreviousEnrollment (CourseNumber, DepartmentId, PreviousEnrollmentNumber) VALUES(" +getCourseNumber()+getDepartment()+ getNumberEnrolled() + ")";
+        Database DB = new Database();
+        try {
+            DB.InsertSQL(SQL);
+        }//end try
+        catch (SQLException ex) {
+
+        }//end first catch
+        catch (ApplicationException ex) {
+
+        }//end second catch
+
+    
+    }//end public void Insert 
+    
+    
+    @Override 
+    public String toString(){
+    
+        StringBuilder i = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        i.append("Course number:   " + getCourseNumber() + NEW_LINE);
+        i.append("Department:      " + getDepartment() + NEW_LINE);
+        i.append("Number enrolled: " + getNumberEnrolled() + NEW_LINE);
+       
+        
+        return i.toString();
+    
+    }//end toString
     
 }
