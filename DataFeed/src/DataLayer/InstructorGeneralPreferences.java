@@ -4,6 +4,9 @@
  */
 package DataLayer;
 
+import DataAccess.Database;
+import Exceptions.ApplicationException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -11,8 +14,9 @@ import java.util.ArrayList;
  * @author Erik
  */
 public class InstructorGeneralPreferences {
-    
-private String Department;
+ 
+private int InstructorId;    
+private int Department;
 private String InstructorFirstName;
 private String InstructorLastName;
 private char InstructorMiddleInt;
@@ -20,8 +24,8 @@ private int NumberOfSectionsToTeach;
 private int Weekend;
 private static ArrayList<String> preferences = new ArrayList<String>();
 
-public InstructorGeneralPreferences(String dept, String fName, String lName, char m, int numSec, int saturd, ArrayList<String> campusPreference) {
-    
+public InstructorGeneralPreferences(int instructorId, int dept, String fName, String lName, char m, int numSec, int saturd, ArrayList<String> campusPreference) {
+    InstructorId=instructorId;
     Department=dept;
     InstructorFirstName=fName;
     InstructorLastName= lName;
@@ -32,6 +36,15 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
       
 }
 
+    public int getInstructorId() {
+        return InstructorId;
+    }
+
+    public void setInstructorId(int InstructorId) {
+        this.InstructorId = InstructorId;
+    }
+
+
     public static ArrayList<String> getPreferences() {
         return preferences;
     }
@@ -40,11 +53,11 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
         InstructorGeneralPreferences.preferences = preferences;
     }
 
-    public String getDepartment() {
+    public int getDepartment() {
         return Department;
     }
 
-    public void setDepartment(String Department) {
+    public void setDepartment(int Department) {
         this.Department = Department;
     }
 
@@ -93,6 +106,30 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
     public void setWeekend(int Weekend) {
         this.Weekend = Weekend;
     }
+    
+    
+    
+     public void InsertIntoPfuUser(){
+    ///i added th throws statements...????
+        String SQL;
+        SQL = "INSERT INTO dbo.PfuUser (UserTypeId, DepartmentId, UserFirstName, "
+                + "UserLastName, UserMiddleInit, Username, Password, CreateDate, ModifyDate) " 
+                    + " VALUES("+ 2 + getDepartment() +  getInstructorFirstName() + getInstructorLastName() + getInstructorMiddleInt() + ")";
+        Database DB = new Database();
+        try {
+           InstructorId = DB.InsertSQL(SQL);//scope identity  
+        }//end try
+        catch (SQLException ex) {
+              ////
+           ///ERROR HANDLING FUNCTION
+            Logger.ErrorLog.LogError(ex);
+        }//end first catch
+        catch (ApplicationException ex) {
+            ////
+            Logger.ErrorLog.LogError(ex);
+        }//end second catch
+
+    
 
 @Override 
     public String toString(){
@@ -101,7 +138,7 @@ public InstructorGeneralPreferences(String dept, String fName, String lName, cha
         String NEW_LINE = System.getProperty("line.separator");
         i.append("Instructor's Name:           " + getInstructorFirstName() + " "+ 
                     getInstructorMiddleInt()+ " "+ getInstructorLastName() + NEW_LINE);
-        i.append("Department:                  " + getDepartment() + NEW_LINE);
+        i.append("Department ID:                  " + getDepartment() + NEW_LINE);
         i.append("Number of sections to teach: " + getNumberOfSectionsToTeach() + NEW_LINE);
         i.append("Campus preferences:          " + getPreferences() + NEW_LINE);
        

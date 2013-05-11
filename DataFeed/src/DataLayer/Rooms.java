@@ -4,27 +4,59 @@
  */
 package DataLayer;
 
+import DataAccess.Database;
+import java.sql.SQLException;
+import Exceptions.ApplicationException;
+
 /**
  *
  * @author hdflournoy
  * The objects pertaining to this class will be constructed with the input from the rooms.txt file
+ * 
+ * 
+ * ///ADD FUNCTION TO DELETE, INSERT AND UPDATE IN EACH CLASS
  */
 public class Rooms {
-    
+    ///ADD ROOM ID
+    private int RoomId;
     private int RoomNumber;//room number
-    private String building;//building where the room is located at
+    //private String building;//building where the room is located at
+    
+    private int buildingId;
     private int Capacity;//room capacity 
     private String Campus; //campus is either north south east or west (maybe we call them 1/2/3/4)
     private boolean Media; //media room or not, 1 = yes, 0 = no 
+   // private int scopeIdentity;
     
-  public Rooms (int rNum, String build, int cap, String camp, boolean med){
+    
+  public Rooms (int RooId, int rNum, int buildId, int cap, String camp, boolean med){
+  RoomId=RooId;
   RoomNumber= rNum;
-  building= build;
+  buildingId= buildId;
   Capacity= cap;
   Campus = camp;
   Media= med;
       
   }
+
+    public int getRoomId() {
+        return RoomId;
+    }
+
+    public void setRoomId(int RoomId) {
+        this.RoomId = RoomId;
+    }
+
+//    public int getScopeIdentity() {
+//        return scopeIdentity;
+//    }
+//
+//    public void setScopeIdentity(int scopeIdentity) {
+//        this.scopeIdentity = scopeIdentity;
+//    }
+  
+  
+  
 
     public int getRoomNumber() {
         return RoomNumber;
@@ -50,15 +82,15 @@ public class Rooms {
         this.Campus = Campus;
     }
 
-    public String getBuilding() {
-        return building;
+    public int getBuildingId() {
+        return buildingId;
     }
 
-    public void setBuilding(String building) {
-        this.building = building;
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
     }
 
-    public boolean getMedia() {
+   public boolean getMedia() {
         return Media;
     }
 
@@ -66,13 +98,33 @@ public class Rooms {
         this.Media = Media;
     }
   
-     @Override 
+    public void Insert(){
+    ///i added th throws statements...????
+        String SQL;
+        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId()+ getRoomNumber() +  getCapacity() + getMedia() + ")";
+        Database DB = new Database();
+        try {
+           RoomId = DB.InsertSQL(SQL);//scope identity  
+        }//end try
+        catch (SQLException ex) {
+              ////
+           ///ERROR HANDLING FUNCTION
+            Logger.ErrorLog.LogError(ex);
+        }//end first catch
+        catch (ApplicationException ex) {
+            ////
+            Logger.ErrorLog.LogError(ex);
+        }//end second catch
+
+    
+    }//end public void Insert
+    @Override 
     public String toString(){
     
         StringBuilder i = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
         i.append("Room number: " + getRoomNumber() + NEW_LINE);
-        i.append("Building:    " + getBuilding() + NEW_LINE);
+        i.append("Building ID:    " + getBuildingId() + NEW_LINE);
         i.append("Capacity:    " + getCapacity() + NEW_LINE);
         i.append("Campus:      " + getCampus() + NEW_LINE);
         i.append("Media:       " + getMedia() + NEW_LINE);
