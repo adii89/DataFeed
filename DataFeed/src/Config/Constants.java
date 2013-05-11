@@ -8,4 +8,5 @@ package Config;
  */
 public class Constants {
     public static final int DB_TIMEOUT = 30;
+    public static final String[] Filenames = {"enroll.txt", "instructors.txt", "preferences.txt", "rooms.txt", "sections.txt", "travel.txt"};
 }

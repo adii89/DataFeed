@@ -137,10 +137,10 @@ public InstructorGeneralPreferences(int instructorId, int dept, String fName, St
             ////
             Logger.ErrorLog.LogError(ex);
         }//end second catch
-
+     }
     
 
-@Override 
+    @Override 
     public String toString(){
     
         StringBuilder i = new StringBuilder();
@@ -155,6 +155,4 @@ public InstructorGeneralPreferences(int instructorId, int dept, String fName, St
         return i.toString();
     
     }//end toString
-    
-    
 }

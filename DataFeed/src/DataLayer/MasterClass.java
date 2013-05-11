@@ -5,8 +5,11 @@
 package DataLayer;
 import java.io.*;
 import java.util.*;
-import java.text.*;
 import DataAccess.Database;
+import DataAccess.DatabaseHelper;
+import Exceptions.ApplicationException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
  * @author Valerie
@@ -95,7 +98,7 @@ public static void main(String[] args)throws IOException{
                                 }//end switch 
                                 
                                 boolean media = true;
-                                if(room[4].trim()=="NO"){
+                                if(room[4].trim().equalsIgnoreCase("NO")){
                                 media = false;
                                 }//end if
                                  //Building b = new Building(campusId); 
@@ -172,26 +175,38 @@ public static void main(String[] args)throws IOException{
                                      break;
                             case 2:
 
-                                    //"C:\\sections.txt"
+                                    //"sections.txt"
                                     String[] section = line.split("\\|");
                                     String courseN= section[0].trim();
                                     String department = section[1].trim();
+                                    String SQL = "SELECT DepartmentId FROM Department WHERE DepartmentName = " + DatabaseHelper.Quote(department);
+                                    Database DB = new Database();
+                                    int DepartmentId;
+                                    try {
+                                        ResultSet rs = DB.SelectSQL(SQL);
+                                        if (rs.next()) {
+                                            DepartmentId = rs.getInt(1);
+                                            String cNumber =section[2].trim();
+                                            int CallNumber = Integer.parseInt(cNumber);
+                                            String days= section[3];
+                                            String time = section[4];
+                                            media = true;
+                                            if(section[5].trim().equalsIgnoreCase("NO")){
+                                                media = false;
+                                            }
 
-                                    String callNumber =section[2].trim();
-                                    String days= section[3];
-                                    String time = section[4];
-                                    media = true;
-                                     if(section[5].trim()=="NO"){
-                                        media = false;
-                                           }//end if
-
-                                    Sections s= new Sections(courseN, department, callNumber,days, time, media);
-                                    System.out.println(s.toString());
-                                    sections.add(s);
-
-                                    String insertSections;
-                                    insertSections="INSERT INTO ";
-
+                                            Sections s= new Sections(courseN, DepartmentId, CallNumber,days, time, media);
+                                            s.Insert();
+                                            System.out.println(s.toString());
+                                        } else {
+                                            System.out.println("The Department For This Section Was not Found!!!");
+                                            System.out.println("Please Upload Instructors File");
+                                        }
+                                    } catch (SQLException ex) {
+                                        Logger.ErrorLog.LogError(ex);
+                                    } catch (ApplicationException ex) {
+                                        Logger.ErrorLog.LogError(ex);
+                                    }
                                     break;
                                case 3:
                                      

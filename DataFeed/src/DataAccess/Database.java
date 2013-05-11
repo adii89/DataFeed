@@ -85,6 +85,7 @@ public class Database {
     //TODO: SelectSQL
     public ResultSet SelectSQL(String SQL) throws ApplicationException, SQLException{
         if (SQL.toUpperCase().startsWith("SELECT")) {
+            OpenConnection();
             if (Conn != null) {
                 Stmt = Conn.createStatement();
                 Stmt.setQueryTimeout(Constants.DB_TIMEOUT);

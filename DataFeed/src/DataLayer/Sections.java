@@ -5,6 +5,7 @@
 package DataLayer;
 
 import DataAccess.Database;
+import DataAccess.DatabaseHelper;
 import Exceptions.ApplicationException;
 import java.sql.SQLException;
 
@@ -15,18 +16,19 @@ import java.sql.SQLException;
  */
 public class Sections{ 
     
+    private int SectionId;
     private String CourseNumber;
    
-    private String Dept;
-    private String CallNumber; 
+    private int DepartmentId;
+    private int CallNumber; 
     
     private String Days; 
     private String Time; //
     private boolean Media; //  
     
-    public Sections (String courseNum, String departm, String callNum, String days, String time, boolean media){
+    public Sections (String courseNum, int departm, int callNum, String days, String time, boolean media){
     CourseNumber = courseNum;
-    Dept= departm;
+    DepartmentId= departm;
     CallNumber= callNum;
     Days=days;
     Time=time;
@@ -42,19 +44,19 @@ public class Sections{
         this.CourseNumber = CourseNumber;
     }
 
-   public String getDept() {
-        return Dept;
+   public int getDept() {
+        return DepartmentId;
     }
 
-    public void setDept(String Dept) {
-        this.Dept = Dept;
+    public void setDept(int Dept) {
+        this.DepartmentId = Dept;
     }
 
-    public String getCallNumber() {
+    public int getCallNumber() {
         return CallNumber;
     }
 
-    public void setCallNumber(String CallNumber) {
+    public void setCallNumber(int CallNumber) {
         this.CallNumber = CallNumber;
     }
 
@@ -77,6 +79,10 @@ public class Sections{
     public boolean getMedia() {
         return Media;
     }
+    
+    private int getMediaDB() {
+        return Media ? 1 : 0;
+    }
 
     public void setMedia(boolean Media) {
         this.Media = Media;
@@ -85,10 +91,10 @@ public class Sections{
      public void Insert(){
     
         String SQL;
-        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+getCallNumber()+ getDays()  +  getTime()  + getMedia() + ")";
+        SQL = "INSERT INTO dbo.Section (CourseNumber, CallNumber, MeetingDays, MeetingTimes, MediaRequired) VALUES(" +getCourseNumber()+ "," + getCallNumber() + "," + DatabaseHelper.Quote(getDays()) + "," + DatabaseHelper.Quote(getTime()) + "," + getMediaDB() + ")";
         Database DB = new Database();
         try {
-            DB.InsertSQL(SQL);
+            SectionId = DB.InsertSQL(SQL);
         }//end try
         catch (SQLException ex) {
 

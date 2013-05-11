@@ -51,7 +51,6 @@ public class Building {
            buildingId = DB.InsertSQL(SQL);//scope identity
         }//end try
         catch (SQLException ex) {
-                    
             Logger.ErrorLog.LogError(ex);
         }//end first catch
         catch (ApplicationException ex) {

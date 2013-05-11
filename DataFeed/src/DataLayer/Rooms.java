@@ -93,6 +93,10 @@ public class Rooms {
    public boolean getMedia() {
         return Media;
     }
+   
+   private int getMediaDB() {
+       return Media ? 1 : 0;
+   }
 
     public void setMedia(boolean Media) {
         this.Media = Media;
@@ -101,7 +105,7 @@ public class Rooms {
     public void Insert(){
     ///i added th throws statements...????
         String SQL;
-        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId()+ getRoomNumber() +  getCapacity() + getMedia() + ")";
+        SQL = "INSERT INTO dbo.BuildingRoom (BuildingId, RoomNumber, RoomCapacity, MediaAvailable) VALUES("+ getBuildingId() + "," + getRoomNumber() + "," +  getCapacity() + "," + getMediaDB() + ")";
         Database DB = new Database();
         try {
            RoomId = DB.InsertSQL(SQL);//scope identity  
